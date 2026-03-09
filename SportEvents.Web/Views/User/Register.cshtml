@@ -1,0 +1,75 @@
+﻿@model MVC.Core.Sports_competitions.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Регистрация";
+}
+
+<main class="form-centered">
+    <form asp-action="Register" method="post">
+        @Html.AntiForgeryToken()
+
+        <h1 class="h3 mb-2 fw-normal">Регистрация</h1>
+
+        <div class="form-floating mb-2">
+            <input asp-for="LastName" class="form-control" placeholder="Иванов" />
+            <label asp-for="LastName">Фамилия</label>
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-2">
+            <input asp-for="FirstName" class="form-control" placeholder="Иван" />
+            <label asp-for="FirstName">Имя</label>
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-2">
+            <input asp-for="MiddleName" class="form-control" placeholder="Иванович" />
+            <label asp-for="MiddleName">Отчество</label>
+            <span asp-validation-for="MiddleName" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-2">
+            <input asp-for="BirthDate" type="date" class="form-control" />
+            <label asp-for="BirthDate">Дата рождения</label>
+            <span asp-validation-for="BirthDate" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-2">
+            <select asp-for="Sex" class="form-select">
+                <option value="true">Мужской</option>
+                <option value="false">Женский</option>
+            </select>
+            <label asp-for="Sex">Пол</label>
+            <span asp-validation-for="Sex" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-2">
+            <input asp-for="Phone" class="form-control" placeholder="+79991234567" />
+            <label asp-for="Phone">Телефон</label>
+            <span asp-validation-for="Phone" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-2">
+            <input asp-for="Email" type="email" class="form-control" placeholder="name@example.com" />
+            <label asp-for="Email">Email</label>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-2">
+            <input asp-for="Password" class="form-control" placeholder="Password" />
+            <label asp-for="Password">Пароль</label>
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-2">
+            <input asp-for="ConfirmPassword" class="form-control" placeholder="Password" />
+            <label asp-for="ConfirmPassword">Повторите пароль</label>
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+
+        <button class="btn btn-primary w-100 py-2" type="submit">Регистрация</button>
+    </form>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

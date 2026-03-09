@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="SportEvents.Scaffold/SportEvents.Scaffold.csproj" Id="1278ccba-f52a-4fb4-86b0-6d8ef586e6bd" />
+  <Project Path="SportEvents.Web/SportEvents.Web.csproj" />
+</Solution>
