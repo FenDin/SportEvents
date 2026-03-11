@@ -1,0 +1,19 @@
+using System;
+using System.Collections.Generic;
+
+namespace SportEvents.Web.Models.Db;
+
+public partial class Image
+{
+    public int id { get; set; }
+
+    public string url { get; set; } = null!;
+
+    public string title { get; set; } = null!;
+
+    public string? description { get; set; }
+
+    public DateTime dateCreated { get; set; }
+
+    public virtual ICollection<ImagesUser> ImagesUsers { get; set; } = new List<ImagesUser>();
+}

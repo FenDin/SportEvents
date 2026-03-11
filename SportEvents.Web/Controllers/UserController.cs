@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVC.Core.Sports_competitions.Models;
+using SportEvents.Web.Data;
+using SportEvents.Web.Models.Db;
+using BCrypt.Net;
 
 namespace MVC.Core.Sports_competitions.Controllers
 {
@@ -47,6 +51,7 @@ namespace MVC.Core.Sports_competitions.Controllers
         [HttpGet]
         public IActionResult Register() => View(new RegisterViewModel());
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
@@ -55,17 +60,70 @@ namespace MVC.Core.Sports_competitions.Controllers
             {
                 return View(model);
             }
+
+            var age = CalcAge(model.BirthDate, DateTime.Today);
+
+            if (await db.Contacts.AnyAsync(c=> c.email == model.Email))
+            {
+                ModelState.AddModelError(nameof(model.Email), "Пользователь с таким email уже существует.");
+                return View(model);
+            }
             
+            // хэшируем пароль
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(model.Password);
+            //Bcrypt превращает пароль в безопасный хеш
 
+            // 1) создаём Contact
+            var contact = new Contact
+            {
+                firstname = model.FirstName,
+                lastname = model.LastName,
+                middlename = model.MiddleName,
+                age = age,
+                sex = model.Sex,
+                phone = model.Phone,
+                email = model.Email,
+                passwordHash = passwordHash
+            };
 
+            db.Contacts.Add(contact);
+            await db.SaveChangesAsync();
 
+            // 2) создаём User: роль можно поставить "Пользователь" (или "Участник" — как решишь)
+            // ищем роль "Пользователь"
+            var role = await db.Roles.FirstOrDefaultAsync(r => r.title == "Пользователь");
+
+            var user = new User
+            {
+                idContact = contact.id,
+                idRole = role.id
+            };
+
+            db.Users.Add(user);
+            await db.SaveChangesAsync();
+
+            // пока просто редирект на вход
             return RedirectToAction("Login");
+        }
+
+        //пример:др уже был в этом году
+        //др:01.02.2000, сегодня: 10.03.2026
+        //    2026-2000=26
+        //    проверка: 01.02.2000 > 10.03.(2026-26) - ответ:нет, значит возраст не уменьшается
+        private static int CalcAge(DateTime birthDate, DateTime today)
+        {
+            int age = today.Year - birthDate.Year;
+
+            if (birthDate.Date > today.AddYears(-age).Date)
+                age--;
+
+            return age;
         }
 
         #endregion
 
-        #region CRUD
-        // GET: UserController
+            #region CRUD
+            // GET: UserController
         public ActionResult Index()
         {
             return View();

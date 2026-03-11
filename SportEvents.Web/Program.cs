@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using MVC.Core.Sports_competitions.Data;
+using SportEvents.Web.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
