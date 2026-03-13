@@ -1,4 +1,4 @@
-namespace MVC.Core.Sports_competitions.Models;
+namespace SportEvents.Web.Models;
 
 public class ErrorViewModel
 {

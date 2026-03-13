@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace MVC.Core.Sports_competitions.Views.Account
+namespace SportEvents.Web.Views.Account
 {
     public class RegisterModel : PageModel
     {

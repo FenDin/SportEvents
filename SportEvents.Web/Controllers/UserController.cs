@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MVC.Core.Sports_competitions.Models;
+using SportEvents.Web.Models;
 using SportEvents.Web.Data;
 using SportEvents.Web.Models.Db;
 using BCrypt.Net;
 using PhoneNumbers;
 
-namespace MVC.Core.Sports_competitions.Controllers
+namespace SportEvents.Web.Controllers
 {
     public class UserController : Controller
     {

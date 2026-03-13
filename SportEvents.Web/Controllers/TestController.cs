@@ -1,4 +1,4 @@
-﻿namespace MVC.Core.Sports_competitions.Controllers
+﻿namespace SportEvents.Web.Controllers
 {
     public class TestController
     {

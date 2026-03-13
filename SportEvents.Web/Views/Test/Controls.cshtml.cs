@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace MVC.Core.Sports_competitions.Views.Test
+namespace SportEvents.Web.Views.Test
 {
     public class ControlsModel : PageModel
     {

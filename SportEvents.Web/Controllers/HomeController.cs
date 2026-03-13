@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using MVC.Core.Sports_competitions.Models;
+using SportEvents.Web.Models;
 using System.Diagnostics;
 
-namespace MVC.Core.Sports_competitions.Controllers
+namespace SportEvents.Web.Controllers
 {
     public class HomeController : Controller
     {
