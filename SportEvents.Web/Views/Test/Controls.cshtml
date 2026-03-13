@@ -1,4 +1,36 @@
-﻿@page
-@model SportEvents.Web.Views.Test.ControlsModel
-@{
+﻿@{
+    ViewData["Title"] = "Тестирование контролов";
 }
+
+<h1 class="mb-4">Тестирование контролов</h1>
+
+<div class="mb-3">
+    <label class="form-label">Текстовое поле</label>
+    <input class="form-control" type="text" placeholder="Введите текст" />
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Дата</label>
+    <input class="form-control" type="date" />
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Список</label>
+    <select class="form-select">
+        <option>Первый вариант</option>
+        <option>Второй вариант</option>
+        <option>Третий вариант</option>
+    </select>
+</div>
+
+<div class="form-check mb-2">
+    <input class="form-check-input" type="checkbox" id="check1" />
+    <label class="form-check-label" for="check1">
+        Чекбокс
+    </label>
+</div>
+
+<div class="mb-3">
+    <button class="btn btn-primary">Основная кнопка</button>
+    <button class="btn btn-outline-secondary">Дополнительная кнопка</button>
+</div>
