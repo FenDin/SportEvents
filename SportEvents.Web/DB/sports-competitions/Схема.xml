@@ -310,6 +310,10 @@
 			<default>NULL</default>
 			<relation table="Role" row="id" />
 		</row>
+		<row name="dateCreated" null="0" autoincrement="0">
+			<datatype>datetime</datatype>
+			<default>NULL</default>
+		</row>
 		<key type="PRIMARY" name="">
 			<part>id</part>
 		</key>

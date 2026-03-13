@@ -13,5 +13,5 @@ public partial class School
 
     public virtual ICollection<Participant> Participants { get; set; } = new List<Participant>();
 
-    public virtual ICollection<SchoolsSportsSubtype> SchoolsSportsSubtypes { get; set; } = new List<SchoolsSportsSubtype>();
+    public virtual ICollection<SchoolsSportsSubType> SchoolsSportsSubTypes { get; set; } = new List<SchoolsSportsSubType>();
 }

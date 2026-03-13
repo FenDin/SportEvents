@@ -11,7 +11,7 @@ public partial class SportType
 
     public string title { get; set; } = null!;
 
-    public virtual ICollection<SportSubType> SportSubTypes { get; set; } = new List<SportSubType>();
+    public virtual ICollection<SportSubtype> SportSubtypes { get; set; } = new List<SportSubtype>();
 
     public virtual Sport idSportNavigation { get; set; } = null!;
 }

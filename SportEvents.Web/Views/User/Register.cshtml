@@ -3,6 +3,12 @@
     ViewData["Title"] = "Регистрация";
 }
 
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.11/build/css/intlTelInput.css" />
+
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.11/build/js/intlTelInput.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.11/build/js/utils.js"></script>
+
 <main class="form-centered">
     <form asp-action="Register" method="post">
         @Html.AntiForgeryToken()
@@ -43,9 +49,9 @@
         </div>
 
         <div class="form-floating mb-2">
-            <input asp-for="Phone" class="form-control" placeholder="+79991234567" />
-            <label asp-for="Phone">Телефон</label>
-            <span asp-validation-for="Phone" class="text-danger"></span>
+            <label asp-for="Phone" class="form-label">Телефон</label>
+            <input asp-for="Phone" id="phone" type="tel" class="form-control" />
+            <span asp-validation-for="Phone" class="text-danger d-block mt-1"></span>
         </div>
 
         <div class="form-floating mb-2">
@@ -72,4 +78,66 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const input = document.querySelector("#phone");
+            const errorMsg = document.querySelector("[data-valmsg-for='Phone']");
+
+            const iti = window.intlTelInput(input, {
+                initialCountry: "auto",
+                nationalMode: false,
+                formatOnDisplay: true,
+                strictMode: true,
+
+                geoIpLookup: function(callback) {
+                    fetch("https://ipapi.co/json")
+                        .then(res => res.json())
+                        .then(data => callback(data.country_code))
+                        .catch(() => callback("ru"));
+                },
+
+                utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.11/build/js/utils.js"
+            });
+
+            // "+" нельзя удалить
+            input.addEventListener("input", function () {
+                if (!this.value.startsWith("+")) {
+                    this.value = "+" + this.value.replace(/\+/g, "");
+                }
+            });
+
+            input.addEventListener("keydown", function(e) {
+                if (this.selectionStart === 0 && (e.key === "Backspace" || e.key === "Delete")) {
+                    e.preventDefault();
+                }
+            });
+
+            const errorMap = [
+                "Неверный номер",
+                "Неверный код страны",
+                "Номер слишком короткий",
+                "Номер слишком длинный",
+                "Неверный номер"
+            ];
+
+            const form = document.querySelector("form");
+
+            form.addEventListener("submit", function (e) {
+
+                if (!iti.isValidNumber()) {
+
+                    const errorCode = iti.getValidationError();
+                    errorMsg.textContent = errorMap[errorCode] || "Неверный номер";
+
+                    e.preventDefault();
+                    return false;
+                }
+
+                input.value = iti.getNumber();
+            });
+
+        });
+    </script>
 }

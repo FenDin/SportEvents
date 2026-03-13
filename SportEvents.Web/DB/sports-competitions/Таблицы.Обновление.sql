@@ -7,6 +7,9 @@
 ALTER TABLE [Image]
 ADD CONSTRAINT DF_ImageCreated DEFAULT (SYSDATETIME()) FOR dateCreated;
 
+ALTER TABLE [User]
+ADD CONSTRAINT DF_UserCreated DEFAULT (SYSDATETIME()) FOR dateCreated;
+
 --#endregion
 
 --#region Валидация
@@ -85,8 +88,8 @@ CHECK (dateStart <= dateEnd)
 -- #region CONTACT
 
 --Возраст
-ALTER TABLE dbo.Contact
-ADD CONSTRAINT CK_Contact_Age CHECK (age BETWEEN 0 AND 120);
+-- ALTER TABLE dbo.Contact
+-- ADD CONSTRAINT CK_Contact_Age CHECK (age BETWEEN 0 AND 120);
 --ФИО на пустые строки
 ALTER TABLE dbo.Contact
 ADD CONSTRAINT CK_Contact_FirstName_NotEmpty

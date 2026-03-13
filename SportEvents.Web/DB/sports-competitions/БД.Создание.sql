@@ -1,3 +1,5 @@
+GO
+
 IF NOT EXISTS (
     SELECT
         name

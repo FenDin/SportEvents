@@ -7,9 +7,9 @@ public partial class Image
 {
     public int id { get; set; }
 
-    public string url { get; set; } = null!;
+    public string? url { get; set; }
 
-    public string title { get; set; } = null!;
+    public string? title { get; set; }
 
     public string? description { get; set; }
 

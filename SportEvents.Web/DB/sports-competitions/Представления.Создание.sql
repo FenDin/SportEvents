@@ -1,3 +1,23 @@
+GO
+-- #region vContact (вся инфа о контактах)
+
+CREATE OR ALTER VIEW vContact
+AS
+    SELECT
+        c.id       AS ContactId,
+        c.lastname AS LastName,
+        c.firstname AS FirstName,
+        c.middlename AS MiddleName,
+        c.birthDate AS BirthDate,
+        c.sex AS Sex,
+        c.phone    AS Phone,
+        c.email    AS Email,
+        c.passwordHash AS PasswordHash
+    FROM [Contact] c
+
+-- #endregion
+GO
+
 -- #region vSportSubTypesFull:Вид спорта → Раздел вида спорта → Дисциплина
 
 CREATE OR ALTER VIEW vSportSubTypesFull
@@ -93,17 +113,10 @@ AS
         sch.title AS SchoolTitle,
         sch.description AS SchoolDescription,
 
-        c.id         AS ContactId,
-        c.lastname   AS LastName,
-        c.firstname  AS FirstName,
-        c.middlename AS MiddleName,
-        c.age        AS Age,
-        c.sex        AS Sex,
-        c.phone      AS Phone,
-        c.email      AS Email
+        vC.*
 
     FROM Participant p
-        JOIN Contact c ON c.id = p.idContact
+        JOIN vContact vC ON vC.ContactId = p.idContact
         JOIN School sch ON sch.id = p.idSchool
 
 GO
@@ -132,19 +145,15 @@ CREATE OR ALTER VIEW vUsersFull
 AS
     SELECT
         u.id       AS UserId,
-        r.id       AS RoleId,
+        u.dateCreated AS UserDateCreated,
+        r.id AS RoleId,
         r.title    AS RoleTitle,
-        c.id       AS ContactId,
-        c.email    AS Email,
-        c.phone    AS Phone,
-        c.lastname AS LastName,
-        c.firstname AS FirstName,
-        c.middlename AS MiddleName,
-        c.passwordHash AS PasswordHash
+
+        vC.*
 
     FROM [User] u
         JOIN [Role] r ON r.id = u.idRole
-        JOIN Contact c ON c.id = u.idContact
+        JOIN vContact vC ON vC.ContactId = u.idContact
 
 GO        
 

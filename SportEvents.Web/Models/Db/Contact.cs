@@ -13,13 +13,13 @@ public partial class Contact
 
     public string? middlename { get; set; }
 
-    public int age { get; set; }
+    public DateOnly birthDate { get; set; }
 
     public bool sex { get; set; }
 
-    public string phone { get; set; } = null!;
+    public string? phone { get; set; }
 
-    public string? email { get; set; }
+    public string email { get; set; } = null!;
 
     public string? passwordHash { get; set; }
 

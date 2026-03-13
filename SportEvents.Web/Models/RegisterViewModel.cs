@@ -14,13 +14,13 @@ namespace MVC.Core.Sports_competitions.Models
         public string? MiddleName { get; set; }
 
         [Required, DataType(DataType.Date)]
-        public DateTime BirthDate { get; set; } = DateTime.Today.AddYears(-18);
+        public DateOnly BirthDate { get; set; } = DateOnly.FromDateTime(DateTime.Today.AddYears(-18));
 
         [Required]
         public bool Sex { get; set; }
 
-        [Required, StringLength(50)]
-        public string Phone { get; set; } = "";
+        [Required]
+        public string Phone { get; set; } = "+";
 
         [Required, EmailAddress, StringLength(255)]
         public string Email { get; set; } = "";

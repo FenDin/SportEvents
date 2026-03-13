@@ -37,17 +37,17 @@ public partial class vCompetitionParticipant
 
     public int ContactId { get; set; }
 
+    public string Email { get; set; } = null!;
+
+    public DateOnly BirthDate { get; set; }
+
     public string LastName { get; set; } = null!;
 
     public string FirstName { get; set; } = null!;
 
     public string? MiddleName { get; set; }
 
-    public int Age { get; set; }
+    public string? Phone { get; set; }
 
-    public bool Sex { get; set; }
-
-    public string Phone { get; set; } = null!;
-
-    public string? Email { get; set; }
+    public string? PasswordHash { get; set; }
 }

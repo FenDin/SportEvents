@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SportEvents.Scaffold.Models.Db;
 
-public partial class SchoolsSportsSubtype
+public partial class SchoolsSportsSubType
 {
     public int id { get; set; }
 
@@ -13,5 +13,5 @@ public partial class SchoolsSportsSubtype
 
     public virtual School idSchoolNavigation { get; set; } = null!;
 
-    public virtual SportSubType idSportSubTypeNavigation { get; set; } = null!;
+    public virtual SportSubtype idSportSubTypeNavigation { get; set; } = null!;
 }

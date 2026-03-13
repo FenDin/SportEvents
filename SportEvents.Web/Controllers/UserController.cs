@@ -5,6 +5,7 @@ using MVC.Core.Sports_competitions.Models;
 using SportEvents.Web.Data;
 using SportEvents.Web.Models.Db;
 using BCrypt.Net;
+using PhoneNumbers;
 
 namespace MVC.Core.Sports_competitions.Controllers
 {
@@ -61,7 +62,13 @@ namespace MVC.Core.Sports_competitions.Controllers
                 return View(model);
             }
 
-            var age = CalcAge(model.BirthDate, DateTime.Today);
+            // Проверка номера телефона
+            if (!IsValidPhone(model.Phone))
+            {
+                ModelState.AddModelError(nameof(model.Phone), "Неверный номер телефона.");
+                return View(model);
+            }
+
 
             if (await db.Contacts.AnyAsync(c=> c.email == model.Email))
             {
@@ -79,7 +86,7 @@ namespace MVC.Core.Sports_competitions.Controllers
                 firstname = model.FirstName,
                 lastname = model.LastName,
                 middlename = model.MiddleName,
-                age = age,
+                birthDate = model.BirthDate,
                 sex = model.Sex,
                 phone = model.Phone,
                 email = model.Email,
@@ -106,24 +113,27 @@ namespace MVC.Core.Sports_competitions.Controllers
             return RedirectToAction("Login");
         }
 
-        //пример:др уже был в этом году
-        //др:01.02.2000, сегодня: 10.03.2026
-        //    2026-2000=26
-        //    проверка: 01.02.2000 > 10.03.(2026-26) - ответ:нет, значит возраст не уменьшается
-        private static int CalcAge(DateTime birthDate, DateTime today)
+        private bool IsValidPhone(string phone)
         {
-            int age = today.Year - birthDate.Year;
+            var phoneUtil = PhoneNumberUtil.GetInstance();
 
-            if (birthDate.Date > today.AddYears(-age).Date)
-                age--;
-
-            return age;
+            try
+            {
+                var number = phoneUtil.Parse(phone, null);
+                return phoneUtil.IsValidNumber(number);
+            }
+            catch
+            {
+                return false;
+            }
         }
+
+
 
         #endregion
 
-            #region CRUD
-            // GET: UserController
+        #region CRUD
+        // GET: UserController
         public ActionResult Index()
         {
             return View();

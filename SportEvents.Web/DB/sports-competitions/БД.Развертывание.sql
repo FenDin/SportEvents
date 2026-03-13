@@ -1,27 +1,37 @@
+
 -- Создание БД
-:r "C:\Users\User\source\repos\MVC.Core.Sports-competitions\MVC.Core.Sports-competitions\DB\sports-competitions\БД.Создание.sql"
+PRINT 'Создание БД'
+:r "C:\Users\User\source\repos\SportEvents\SportEvents.Web\DB\sports-competitions\БД.Создание.sql"
 GO
 -- Очистка БД
-:r "C:\Users\User\source\repos\MVC.Core.Sports-competitions\MVC.Core.Sports-competitions\DB\sports-competitions\БД.Очистка.sql"
+PRINT 'Очистка БД'
+:r "C:\Users\User\source\repos\SportEvents\SportEvents.Web\DB\sports-competitions\БД.Очистка.sql"
 GO
 -- Создание таблиц
-:r "C:\Users\User\source\repos\MVC.Core.Sports-competitions\MVC.Core.Sports-competitions\DB\sports-competitions\Таблицы.Создание.sql"
+PRINT 'Создание таблиц'
+:r "C:\Users\User\source\repos\SportEvents\SportEvents.Web\DB\sports-competitions\Таблицы.Создание.sql"
 GO
 -- Обновление таблиц
-:r "C:\Users\User\source\repos\MVC.Core.Sports-competitions\MVC.Core.Sports-competitions\DB\sports-competitions\Таблицы.Обновление.sql"
+PRINT 'Обновление таблиц'
+:r "C:\Users\User\source\repos\SportEvents\SportEvents.Web\DB\sports-competitions\Таблицы.Обновление.sql"
 GO
 -- Создание представлений
-:r "C:\Users\User\source\repos\MVC.Core.Sports-competitions\MVC.Core.Sports-competitions\DB\sports-competitions\Представления.Создание.sql"
+PRINT 'Создание представлений'
+:r "C:\Users\User\source\repos\SportEvents\SportEvents.Web\DB\sports-competitions\Представления.Создание.sql"
 GO
 -- Создание процедур
-:r "C:\Users\User\source\repos\MVC.Core.Sports-competitions\MVC.Core.Sports-competitions\DB\sports-competitions\Процедуры.Создание.sql"
+PRINT 'Создание процедур'
+:r "C:\Users\User\source\repos\SportEvents\SportEvents.Web\DB\sports-competitions\Процедуры.Создание.sql"
 GO
 -- Заполнение таблиц
-:r "C:\Users\User\source\repos\MVC.Core.Sports-competitions\MVC.Core.Sports-competitions\DB\sports-competitions\Таблицы.Заполнение.sql"
+PRINT 'Заполнение таблиц'
+:r "C:\Users\User\source\repos\SportEvents\SportEvents.Web\DB\sports-competitions\Таблицы.Заполнение.sql"
 GO
 -- Выборка из таблиц
---:r "C:\Users\User\source\repos\MVC.Core.Sports-competitions\MVC.Core.Sports-competitions\DB\sports-competitions\Таблицы.Выборка.sql"
+-- PRINT 'Выборка из таблиц'
+--:r "C:\Users\User\source\repos\SportEvents\SportEvents.Web\DB\sports-competitions\Таблицы.Выборка.sql"
 GO
 -- Выборка из представлений
-:r "C:\Users\User\source\repos\MVC.Core.Sports-competitions\MVC.Core.Sports-competitions\DB\sports-competitions\Представления.Выборка.sql"
+PRINT 'Выборка из представлений'
+:r "C:\Users\User\source\repos\SportEvents\SportEvents.Web\DB\sports-competitions\Представления.Выборка.sql"
 GO

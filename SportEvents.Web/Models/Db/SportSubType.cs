@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SportEvents.Web.Models.Db;
 
-public partial class SportSubType
+public partial class SportSubtype
 {
     public int id { get; set; }
 
@@ -13,7 +13,7 @@ public partial class SportSubType
 
     public virtual ICollection<Competition> Competitions { get; set; } = new List<Competition>();
 
-    public virtual ICollection<SchoolsSportsSubtype> SchoolsSportsSubtypes { get; set; } = new List<SchoolsSportsSubtype>();
+    public virtual ICollection<SchoolsSportsSubType> SchoolsSportsSubTypes { get; set; } = new List<SchoolsSportsSubType>();
 
     public virtual SportType idSportTypeNavigation { get; set; } = null!;
 }

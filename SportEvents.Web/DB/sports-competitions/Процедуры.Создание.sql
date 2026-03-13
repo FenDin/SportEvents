@@ -1,3 +1,5 @@
+GO
+
 CREATE OR ALTER PROCEDURE dbo.CheckDbObjectExists
     @objectType NVARCHAR(50),
     -- CHECK, DEFAULT, INDEX, FK

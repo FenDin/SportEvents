@@ -21,5 +21,5 @@ public partial class Competition
 
     public virtual ICollection<ParticipantsCompetition> ParticipantsCompetitions { get; set; } = new List<ParticipantsCompetition>();
 
-    public virtual SportSubType idSportSubTypeNavigation { get; set; } = null!;
+    public virtual SportSubtype idSportSubTypeNavigation { get; set; } = null!;
 }

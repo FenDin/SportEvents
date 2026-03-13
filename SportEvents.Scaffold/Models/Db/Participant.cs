@@ -7,7 +7,7 @@ public partial class Participant
 {
     public int id { get; set; }
 
-    public int idSchool { get; set; }
+    public int? idSchool { get; set; }
 
     public int idContact { get; set; }
 
@@ -15,5 +15,5 @@ public partial class Participant
 
     public virtual Contact idContactNavigation { get; set; } = null!;
 
-    public virtual School idSchoolNavigation { get; set; } = null!;
+    public virtual School? idSchoolNavigation { get; set; }
 }

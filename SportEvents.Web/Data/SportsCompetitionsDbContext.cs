@@ -32,11 +32,11 @@ public partial class SportsCompetitionsDbContext : DbContext
 
     public virtual DbSet<School> Schools { get; set; }
 
-    public virtual DbSet<SchoolsSportsSubtype> SchoolsSportsSubtypes { get; set; }
+    public virtual DbSet<SchoolsSportsSubType> SchoolsSportsSubTypes { get; set; }
 
     public virtual DbSet<Sport> Sports { get; set; }
 
-    public virtual DbSet<SportSubType> SportSubTypes { get; set; }
+    public virtual DbSet<SportSubtype> SportSubtypes { get; set; }
 
     public virtual DbSet<SportType> SportTypes { get; set; }
 
@@ -45,6 +45,8 @@ public partial class SportsCompetitionsDbContext : DbContext
     public virtual DbSet<vCompetitionParticipant> vCompetitionParticipants { get; set; }
 
     public virtual DbSet<vCompetitionsFull> vCompetitionsFulls { get; set; }
+
+    public virtual DbSet<vContact> vContacts { get; set; }
 
     public virtual DbSet<vEventsCompetitionsFull> vEventsCompetitionsFulls { get; set; }
 
@@ -60,7 +62,7 @@ public partial class SportsCompetitionsDbContext : DbContext
     {
         modelBuilder.Entity<Competition>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("PK__Competit__3213E83F45532762");
+            entity.HasKey(e => e.id).HasName("PK__Competit__3213E83F4FCFDA85");
 
             entity.ToTable("Competition");
 
@@ -76,12 +78,12 @@ public partial class SportsCompetitionsDbContext : DbContext
             entity.HasOne(d => d.idSportSubTypeNavigation).WithMany(p => p.Competitions)
                 .HasForeignKey(d => d.idSportSubType)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Competiti__idSpo__1CC7FE65");
+                .HasConstraintName("FK__Competiti__idSpo__6B1B9438");
         });
 
         modelBuilder.Entity<Contact>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("PK__Contact__3213E83F2282C091");
+            entity.HasKey(e => e.id).HasName("PK__Contact__3213E83F0E2CF20C");
 
             entity.ToTable("Contact");
 
@@ -95,7 +97,7 @@ public partial class SportsCompetitionsDbContext : DbContext
 
         modelBuilder.Entity<Event>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("PK__Event__3213E83FBA9148D0");
+            entity.HasKey(e => e.id).HasName("PK__Event__3213E83F75899F3F");
 
             entity.ToTable("Event");
 
@@ -109,7 +111,7 @@ public partial class SportsCompetitionsDbContext : DbContext
 
         modelBuilder.Entity<EventsCompetition>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("PK__EventsCo__3213E83F02DBFAFF");
+            entity.HasKey(e => e.id).HasName("PK__EventsCo__3213E83F8B29B569");
 
             entity.HasIndex(e => e.idCompetition, "IX_EC_idCompetition");
 
@@ -119,16 +121,18 @@ public partial class SportsCompetitionsDbContext : DbContext
 
             entity.HasOne(d => d.idCompetitionNavigation).WithMany(p => p.EventsCompetitions)
                 .HasForeignKey(d => d.idCompetition)
-                .HasConstraintName("FK__EventsCom__idCom__1EB046D7");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__EventsCom__idCom__6D03DCAA");
 
             entity.HasOne(d => d.idEventNavigation).WithMany(p => p.EventsCompetitions)
                 .HasForeignKey(d => d.idEvent)
-                .HasConstraintName("FK__EventsCom__idEve__1DBC229E");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__EventsCom__idEve__6C0FB871");
         });
 
         modelBuilder.Entity<Image>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("PK__Image__3213E83F998F6834");
+            entity.HasKey(e => e.id).HasName("PK__Image__3213E83FA1842F42");
 
             entity.ToTable("Image");
 
@@ -142,7 +146,7 @@ public partial class SportsCompetitionsDbContext : DbContext
 
         modelBuilder.Entity<ImagesUser>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("PK__ImagesUs__3213E83F6BCFFEB4");
+            entity.HasKey(e => e.id).HasName("PK__ImagesUs__3213E83FC9373DAF");
 
             entity.HasIndex(e => e.idContact, "IX_ImagesUsers_idContact");
 
@@ -153,17 +157,17 @@ public partial class SportsCompetitionsDbContext : DbContext
             entity.HasOne(d => d.idContactNavigation).WithMany(p => p.ImagesUsers)
                 .HasForeignKey(d => d.idContact)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ImagesUse__idCon__2651689F");
+                .HasConstraintName("FK__ImagesUse__idCon__74A4FE72");
 
             entity.HasOne(d => d.idImageNavigation).WithMany(p => p.ImagesUsers)
                 .HasForeignKey(d => d.idImage)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ImagesUse__idIma__255D4466");
+                .HasConstraintName("FK__ImagesUse__idIma__73B0DA39");
         });
 
         modelBuilder.Entity<Participant>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("PK__Particip__3213E83F61B1C420");
+            entity.HasKey(e => e.id).HasName("PK__Particip__3213E83FB7626B4F");
 
             entity.ToTable("Participant");
 
@@ -176,17 +180,16 @@ public partial class SportsCompetitionsDbContext : DbContext
             entity.HasOne(d => d.idContactNavigation).WithOne(p => p.Participant)
                 .HasForeignKey<Participant>(d => d.idContact)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Participa__idCon__20988F49");
+                .HasConstraintName("FK__Participa__idCon__6EEC251C");
 
             entity.HasOne(d => d.idSchoolNavigation).WithMany(p => p.Participants)
                 .HasForeignKey(d => d.idSchool)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Participa__idSch__1FA46B10");
+                .HasConstraintName("FK__Participa__idSch__6DF800E3");
         });
 
         modelBuilder.Entity<ParticipantsCompetition>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("PK__Particip__3213E83FACF79CCD");
+            entity.HasKey(e => e.id).HasName("PK__Particip__3213E83F3CD36ACA");
 
             entity.HasIndex(e => e.idCompetition, "IX_PC_idCompetition");
 
@@ -197,17 +200,17 @@ public partial class SportsCompetitionsDbContext : DbContext
             entity.HasOne(d => d.idCompetitionNavigation).WithMany(p => p.ParticipantsCompetitions)
                 .HasForeignKey(d => d.idCompetition)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Participa__idCom__218CB382");
+                .HasConstraintName("FK__Participa__idCom__6FE04955");
 
             entity.HasOne(d => d.idParticipantNavigation).WithMany(p => p.ParticipantsCompetitions)
                 .HasForeignKey(d => d.idParticipant)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Participa__idPar__2280D7BB");
+                .HasConstraintName("FK__Participa__idPar__70D46D8E");
         });
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("PK__Role__3213E83FCEE87A67");
+            entity.HasKey(e => e.id).HasName("PK__Role__3213E83FFB93F059");
 
             entity.ToTable("Role");
 
@@ -218,7 +221,7 @@ public partial class SportsCompetitionsDbContext : DbContext
 
         modelBuilder.Entity<School>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("PK__School__3213E83FE9230905");
+            entity.HasKey(e => e.id).HasName("PK__School__3213E83FBF5A7C01");
 
             entity.ToTable("School");
 
@@ -228,9 +231,9 @@ public partial class SportsCompetitionsDbContext : DbContext
             entity.Property(e => e.title).HasMaxLength(255);
         });
 
-        modelBuilder.Entity<SchoolsSportsSubtype>(entity =>
+        modelBuilder.Entity<SchoolsSportsSubType>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("PK__SchoolsS__3213E83F2F2C1AB8");
+            entity.HasKey(e => e.id).HasName("PK__SchoolsS__3213E83F4B9D6082");
 
             entity.HasIndex(e => e.idSchool, "IX_SSS_idSchool");
 
@@ -238,20 +241,20 @@ public partial class SportsCompetitionsDbContext : DbContext
 
             entity.HasIndex(e => new { e.idSportSubType, e.idSchool }, "UX_SchoolsSportsSubtypes").IsUnique();
 
-            entity.HasOne(d => d.idSchoolNavigation).WithMany(p => p.SchoolsSportsSubtypes)
+            entity.HasOne(d => d.idSchoolNavigation).WithMany(p => p.SchoolsSportsSubTypes)
                 .HasForeignKey(d => d.idSchool)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SchoolsSp__idSch__1BD3DA2C");
+                .HasConstraintName("FK__SchoolsSp__idSch__6A276FFF");
 
-            entity.HasOne(d => d.idSportSubTypeNavigation).WithMany(p => p.SchoolsSportsSubtypes)
+            entity.HasOne(d => d.idSportSubTypeNavigation).WithMany(p => p.SchoolsSportsSubTypes)
                 .HasForeignKey(d => d.idSportSubType)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SchoolsSp__idSpo__1ADFB5F3");
+                .HasConstraintName("FK__SchoolsSp__idSpo__69334BC6");
         });
 
         modelBuilder.Entity<Sport>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("PK__Sport__3213E83F89121A92");
+            entity.HasKey(e => e.id).HasName("PK__Sport__3213E83FD896FF1F");
 
             entity.ToTable("Sport");
 
@@ -260,25 +263,25 @@ public partial class SportsCompetitionsDbContext : DbContext
             entity.Property(e => e.title).HasMaxLength(255);
         });
 
-        modelBuilder.Entity<SportSubType>(entity =>
+        modelBuilder.Entity<SportSubtype>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("PK__SportSub__3213E83F09402198");
+            entity.HasKey(e => e.id).HasName("PK__SportSub__3213E83FDEF42CF5");
 
-            entity.ToTable("SportSubType");
+            entity.ToTable("SportSubtype");
 
             entity.HasIndex(e => e.idSportType, "IX_SportSubType_idSportType");
 
             entity.Property(e => e.title).HasMaxLength(255);
 
-            entity.HasOne(d => d.idSportTypeNavigation).WithMany(p => p.SportSubTypes)
+            entity.HasOne(d => d.idSportTypeNavigation).WithMany(p => p.SportSubtypes)
                 .HasForeignKey(d => d.idSportType)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SportSubT__idSpo__19EB91BA");
+                .HasConstraintName("FK__SportSubt__idSpo__683F278D");
         });
 
         modelBuilder.Entity<SportType>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("PK__SportTyp__3213E83F8F6DD3A7");
+            entity.HasKey(e => e.id).HasName("PK__SportTyp__3213E83F2DC84A5B");
 
             entity.ToTable("SportType");
 
@@ -289,12 +292,12 @@ public partial class SportsCompetitionsDbContext : DbContext
             entity.HasOne(d => d.idSportNavigation).WithMany(p => p.SportTypes)
                 .HasForeignKey(d => d.idSport)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SportType__idSpo__18F76D81");
+                .HasConstraintName("FK__SportType__idSpo__674B0354");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("PK__User__3213E83F4C10E096");
+            entity.HasKey(e => e.id).HasName("PK__User__3213E83F8A3B8B6D");
 
             entity.ToTable("User");
 
@@ -304,13 +307,11 @@ public partial class SportsCompetitionsDbContext : DbContext
 
             entity.HasOne(d => d.idContactNavigation).WithOne(p => p.User)
                 .HasForeignKey<User>(d => d.idContact)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__User__idContact__2374FBF4");
+                .HasConstraintName("FK__User__idContact__71C891C7");
 
             entity.HasOne(d => d.idRoleNavigation).WithMany(p => p.Users)
                 .HasForeignKey(d => d.idRole)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__User__idRole__2469202D");
+                .HasConstraintName("FK__User__idRole__72BCB600");
         });
 
         modelBuilder.Entity<vCompetitionParticipant>(entity =>
@@ -327,6 +328,7 @@ public partial class SportsCompetitionsDbContext : DbContext
             entity.Property(e => e.FirstName).HasMaxLength(255);
             entity.Property(e => e.LastName).HasMaxLength(255);
             entity.Property(e => e.MiddleName).HasMaxLength(255);
+            entity.Property(e => e.PasswordHash).HasMaxLength(255);
             entity.Property(e => e.Phone).HasMaxLength(20);
             entity.Property(e => e.SchoolDescription).HasMaxLength(255);
             entity.Property(e => e.SchoolTitle).HasMaxLength(255);
@@ -348,6 +350,21 @@ public partial class SportsCompetitionsDbContext : DbContext
             entity.Property(e => e.SportSubTypeTitle).HasMaxLength(255);
             entity.Property(e => e.SportTitle).HasMaxLength(255);
             entity.Property(e => e.SportTypeTitle).HasMaxLength(255);
+        });
+
+        modelBuilder.Entity<vContact>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vContact");
+
+            entity.Property(e => e.ContactId).ValueGeneratedOnAdd();
+            entity.Property(e => e.Email).HasMaxLength(255);
+            entity.Property(e => e.FirstName).HasMaxLength(255);
+            entity.Property(e => e.LastName).HasMaxLength(255);
+            entity.Property(e => e.MiddleName).HasMaxLength(255);
+            entity.Property(e => e.PasswordHash).HasMaxLength(255);
+            entity.Property(e => e.Phone).HasMaxLength(20);
         });
 
         modelBuilder.Entity<vEventsCompetitionsFull>(entity =>
@@ -377,6 +394,7 @@ public partial class SportsCompetitionsDbContext : DbContext
             entity.Property(e => e.FirstName).HasMaxLength(255);
             entity.Property(e => e.LastName).HasMaxLength(255);
             entity.Property(e => e.MiddleName).HasMaxLength(255);
+            entity.Property(e => e.PasswordHash).HasMaxLength(255);
             entity.Property(e => e.Phone).HasMaxLength(20);
             entity.Property(e => e.SchoolDescription).HasMaxLength(255);
             entity.Property(e => e.SchoolTitle).HasMaxLength(255);
