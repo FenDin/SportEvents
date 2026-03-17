@@ -11,6 +11,8 @@ public partial class User
 
     public int? idRole { get; set; }
 
+    public DateTime dateCreated { get; set; }
+
     public virtual Contact? idContactNavigation { get; set; }
 
     public virtual Role? idRoleNavigation { get; set; }

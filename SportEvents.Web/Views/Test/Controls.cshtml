@@ -4,33 +4,97 @@
 
 <h1 class="mb-4">Тестирование контролов</h1>
 
+@* <input-phone ></input-phone> *@
 <div class="mb-3">
     <label class="form-label">Текстовое поле</label>
     <input class="form-control" type="text" placeholder="Введите текст" />
 </div>
 
-<div class="mb-3">
-    <label class="form-label">Дата</label>
-    <input class="form-control" type="date" />
-</div>
+<div class="row mb-2 align-items-center g-0">
 
-<div class="mb-3">
-    <label class="form-label">Список</label>
-    <select class="form-select">
-        <option>Первый вариант</option>
-        <option>Второй вариант</option>
-        <option>Третий вариант</option>
-    </select>
-</div>
-
-<div class="form-check mb-2">
-    <input class="form-check-input" type="checkbox" id="check1" />
-    <label class="form-check-label" for="check1">
-        Чекбокс
+    <label for="phone" class="col-sm-3 col-form-label">
+        Телефон
     </label>
+
+    <div class="col-sm-9">
+        <div class="form-floating">
+
+            <input id="phone" type="tel" class="form-control" placeholder="Телефон">
+
+            <label for="phone"></label>
+
+        </div>
+
+        <span class="text-danger d-block mt-1"></span>
+    </div>
+
 </div>
 
-<div class="mb-3">
-    <button class="btn btn-primary">Основная кнопка</button>
-    <button class="btn btn-outline-secondary">Дополнительная кнопка</button>
-</div>
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.11/build/css/intlTelInput.css" />
+
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.11/build/js/intlTelInput.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.11/build/js/utils.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const input = document.querySelector("#phone");
+        const errorMsg = document.querySelector("[data-valmsg-for='Phone']");
+
+        const iti = window.intlTelInput(input, {
+            initialCountry: "auto",
+            nationalMode: false,
+            formatOnDisplay: true,
+            strictMode: true,
+
+            geoIpLookup: function(callback) {
+                fetch("https://ipapi.co/json")
+                    .then(res => res.json())
+                    .then(data => callback(data.country_code))
+                    .catch(() => callback("ru"));
+            },
+
+            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.11/build/js/utils.js"
+        });
+
+        // "+" нельзя удалить
+        input.addEventListener("input", function () {
+            if (!this.value.startsWith("+")) {
+                this.value = "+" + this.value.replace(/\+/g, "");
+            }
+        });
+
+        input.addEventListener("keydown", function(e) {
+            if (this.selectionStart === 0 && (e.key === "Backspace" || e.key === "Delete")) {
+                e.preventDefault();
+            }
+        });
+
+        const errorMap = [
+            "Неверный номер",
+            "Неверный код страны",
+            "Номер слишком короткий",
+            "Номер слишком длинный",
+            "Неверный номер"
+        ];
+
+        const form = document.querySelector("form");
+
+        form.addEventListener("submit", function (e) {
+
+            if (!iti.isValidNumber()) {
+
+                const errorCode = iti.getValidationError();
+                errorMsg.textContent = errorMap[errorCode] || "Неверный номер";
+
+                e.preventDefault();
+                return false;
+            }
+
+            input.value = iti.getNumber();
+        });
+
+    });
+
+ </script> 

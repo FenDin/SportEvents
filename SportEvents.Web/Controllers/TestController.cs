@@ -9,5 +9,7 @@ namespace SportEvents.Web.Controllers
         {
             return View();
         }
+
+
     }
 }

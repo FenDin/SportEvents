@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using BCrypt.Net;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.EntityFrameworkCore;
-using SportEvents.Web.Models;
-using SportEvents.Web.Data;
-using SportEvents.Web.Models.Db;
-using BCrypt.Net;
 using PhoneNumbers;
+using SportEvents.Web.Data;
+using SportEvents.Web.Models;
+using SportEvents.Web.Models.Db;
+using System.Security.Claims;
 
 namespace SportEvents.Web.Controllers
 {
@@ -31,7 +35,7 @@ namespace SportEvents.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(RegisterViewModel model, string? returnUrl = null)
+        public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
         {
             if (!ModelState.IsValid)
                 return View(model);
@@ -40,10 +44,44 @@ namespace SportEvents.Web.Controllers
             var contact = await db.Contacts.FirstOrDefaultAsync(c => c.email == model.Email);
             if (contact == null || string.IsNullOrWhiteSpace(contact.passwordHash))
             {
-
+                ModelState.AddModelError("", "Неверный email или пароль");
+                return View(model);
+            }
+            // 2) найти пользователя и роль
+            var user = await db.Users.FirstOrDefaultAsync(u => u.idContact == contact.id);
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Пользователь не найден");
+                return View(model);
             }
 
-            return RedirectToAction("Index", "Home");
+            // 3) проверка пароля
+            var hasher = new PasswordHasher<object>();
+            var res = hasher.VerifyHashedPassword(null!, contact.passwordHash, model.Password);
+            if(res == PasswordVerificationResult.Failed)
+            {
+                ModelState.AddModelError("", "Неверный email или пароль");
+                return View(model);
+            }
+            // 4) выдать cookie
+                    var claims = new List<Claim>
+            {
+                new(ClaimTypes.NameIdentifier, user.id.ToString()),
+                new(ClaimTypes.Name, contact.email),
+                //new(ClaimTypes.Role, user.Rol?.Title ?? "Пользователь"),
+                //new("contactId", contact.Id.ToString())
+            };
+
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(identity),
+                new AuthenticationProperties { IsPersistent = model.RememberMe });
+
+            if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+                return Redirect(returnUrl);
+
+            return RedirectToAction("StartPage", "Home");
         }
         #endregion
 
@@ -75,9 +113,10 @@ namespace SportEvents.Web.Controllers
                 ModelState.AddModelError(nameof(model.Email), "Пользователь с таким email уже существует.");
                 return View(model);
             }
-            
+
             // хэшируем пароль
-            var passwordHash = BCrypt.Net.BCrypt.HashPassword(model.Password);
+            var hasher_reg = new PasswordHasher<object>();
+            var passwordHash = hasher_reg.HashPassword(null!, model.Password);
             //Bcrypt превращает пароль в безопасный хеш
 
             // 1) создаём Contact

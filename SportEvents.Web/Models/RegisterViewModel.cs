@@ -14,7 +14,7 @@ namespace SportEvents.Web.Models
         public string? MiddleName { get; set; }
 
         [Required, DataType(DataType.Date)]
-        public DateOnly BirthDate { get; set; } = DateOnly.FromDateTime(DateTime.Today.AddYears(-18));
+        public DateTime BirthDate { get; set; } = DateTime.Today.AddYears(-18);
 
         [Required]
         public bool Sex { get; set; }

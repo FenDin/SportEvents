@@ -13,7 +13,7 @@ public partial class Contact
 
     public string? middlename { get; set; }
 
-    public DateOnly birthDate { get; set; }
+    public DateTime birthDate { get; set; }
 
     public bool sex { get; set; }
 
