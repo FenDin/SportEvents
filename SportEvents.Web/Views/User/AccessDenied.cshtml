@@ -1,0 +1,13 @@
+@{
+    ViewData["Title"] = "Доступ запрещён";
+}
+
+<section class="content-card narrow-card">
+    <span class="section-kicker">403</span>
+    <h1>Недостаточно прав</h1>
+    <p class="lead-text">Текущая роль не позволяет открыть этот раздел. Войдите под другим аккаунтом или измените роль через администратора.</p>
+    <div class="d-flex gap-2 mt-3">
+        <a class="btn btn-accent" asp-controller="Home" asp-action="Index">На главную</a>
+        <a class="btn btn-outline-secondary" asp-controller="User" asp-action="Login">Сменить аккаунт</a>
+    </div>
+</section>

@@ -1,0 +1,64 @@
+@model EventDetailsViewModel
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<section class="section-shell">
+    <div class="content-card">
+        <span class="section-kicker">Событие</span>
+        <h1>@Model.Title</h1>
+        <p class="lead-text">@(string.IsNullOrWhiteSpace(Model.Description) ? "Описание пока не заполнено." : Model.Description)</p>
+        <div class="meta-row">
+            <span>Начало: @Model.DateStart?.ToString("dd.MM.yyyy HH:mm")</span>
+            <span>Окончание: @Model.DateEnd?.ToString("dd.MM.yyyy HH:mm")</span>
+            <span>Соревнований: @Model.Competitions.Count</span>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-3">
+            <a class="btn btn-outline-secondary" asp-action="Index">К списку событий</a>
+            @if (Model.CanManage)
+            {
+                <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@Model.Id">Редактировать</a>
+                <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@Model.Id">Удалить</a>
+            }
+        </div>
+    </div>
+
+    <div class="content-card">
+        <div class="section-header">
+            <div>
+                <span class="section-kicker">Наполнение события</span>
+                <h2>Соревнования внутри события</h2>
+            </div>
+        </div>
+        @if (Model.Competitions.Count == 0)
+        {
+            <div class="empty-state">Для этого события соревнования пока не назначены.</div>
+        }
+        else
+        {
+            <div class="stack-list">
+                @foreach (var competition in Model.Competitions)
+                {
+                    <article class="list-card">
+                        <div class="d-flex justify-content-between gap-3 flex-wrap">
+                            <div>
+                                <h3>@competition.Title</h3>
+                                <p>@(string.IsNullOrWhiteSpace(competition.Description) ? "Описание пока не заполнено." : competition.Description)</p>
+                                <div class="badge-row">
+                                    <span class="badge text-bg-light">@competition.SportTitle</span>
+                                    <span class="badge text-bg-light">@competition.SportTypeTitle</span>
+                                    <span class="badge text-bg-light">@competition.SportSubTypeTitle</span>
+                                </div>
+                            </div>
+                            <div class="meta-block">
+                                <span>@competition.DateStart?.ToString("dd.MM.yyyy HH:mm")</span>
+                                <span>@competition.DateEnd?.ToString("dd.MM.yyyy HH:mm")</span>
+                            </div>
+                        </div>
+                        <a class="btn btn-sm btn-outline-secondary mt-3" asp-controller="Competitions" asp-action="Details" asp-route-id="@competition.Id">Открыть соревнование</a>
+                    </article>
+                }
+            </div>
+        }
+    </div>
+</section>

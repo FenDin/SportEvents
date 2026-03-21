@@ -1,0 +1,67 @@
+@model CompetitionCatalogViewModel
+@{
+    ViewData["Title"] = "Соревнования";
+}
+
+<section class="section-shell">
+    <div class="section-header">
+        <div>
+            <span class="section-kicker">Каталог соревнований</span>
+            <h1>Спортивные дисциплины и старты</h1>
+        </div>
+        @if (Model.CanManage)
+        {
+            <a class="btn btn-accent" asp-action="Create">Создать соревнование</a>
+        }
+    </div>
+
+    <form method="get" class="filter-panel">
+        <input type="text" name="searchQuery" value="@Model.SearchQuery" class="form-control" placeholder="Поиск по названию, виду спорта или событию" />
+        <select name="status" class="form-select">
+            <option value="all" selected="@(Model.Status == "all" ? "selected" : null)">Все</option>
+            <option value="upcoming" selected="@(Model.Status == "upcoming" ? "selected" : null)">Актуальные</option>
+            <option value="past" selected="@(Model.Status == "past" ? "selected" : null)">Прошедшие</option>
+        </select>
+        <button type="submit" class="btn btn-outline-secondary">Применить</button>
+    </form>
+
+    @if (Model.Items.Count == 0)
+    {
+        <div class="empty-state">Соревнования по текущим фильтрам не найдены.</div>
+    }
+    else
+    {
+        <div class="stack-list">
+            @foreach (var item in Model.Items)
+            {
+                <article class="list-card">
+                    <div class="d-flex justify-content-between gap-3 flex-wrap">
+                        <div>
+                            <h2>@item.Title</h2>
+                            <p>@(string.IsNullOrWhiteSpace(item.Description) ? "Описание пока не заполнено." : item.Description)</p>
+                            <div class="badge-row">
+                                <span class="badge text-bg-light">@item.SportTitle</span>
+                                <span class="badge text-bg-light">@item.SportTypeTitle</span>
+                                <span class="badge text-bg-light">@item.SportSubTypeTitle</span>
+                            </div>
+                            <p class="small text-muted mt-2 mb-0">События: @string.Join(", ", item.Events)</p>
+                        </div>
+                        <div class="meta-block">
+                            <span>@item.DateStart?.ToString("dd.MM.yyyy HH:mm")</span>
+                            <span>@item.DateEnd?.ToString("dd.MM.yyyy HH:mm")</span>
+                            <span>@item.ParticipantCount участников</span>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        <a class="btn btn-sm btn-outline-secondary" asp-action="Details" asp-route-id="@item.Id">Подробнее</a>
+                        @if (Model.CanManage)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@item.Id">Редактировать</a>
+                            <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+                        }
+                    </div>
+                </article>
+            }
+        </div>
+    }
+</section>

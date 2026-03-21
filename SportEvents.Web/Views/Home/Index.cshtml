@@ -1,8 +1,97 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@model HomeOverviewViewModel
+@{
+    ViewData["Title"] = "SportEvents";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Это гостевая страница данного сайта</h1>
-    <p>Здесь пока ничего нету:) но скоро будет. По вопросам можно писать <a href="https://vk.com/fendin"> на мою личную страницу VK</a>.</p>
-</div>
+<section class="hero-panel">
+    <div>
+        <span class="section-kicker">Спортивная платформа</span>
+        <h1>Просмотр, управление и участие в спортивных событиях из одного интерфейса.</h1>
+        <p class="lead-text">В проекте уже настроены cookie-сессии, ролевая модель и демо-аккаунты для быстрого запуска сценариев администратора, организатора и участника.</p>
+        <div class="d-flex flex-wrap gap-2 mt-4">
+            <a class="btn btn-accent" asp-controller="Events" asp-action="Index">Открыть события</a>
+            <a class="btn btn-outline-secondary" asp-controller="Competitions" asp-action="Index">Смотреть соревнования</a>
+            @if (!(User.Identity?.IsAuthenticated ?? false))
+            {
+                <a class="btn btn-outline-secondary" asp-controller="User" asp-action="Login">Войти по демо-аккаунту</a>
+            }
+        </div>
+    </div>
+    <div class="stats-grid">
+        <article class="stat-card">
+            <span class="stat-label">События</span>
+            <strong>@Model.EventsCount</strong>
+        </article>
+        <article class="stat-card">
+            <span class="stat-label">Соревнования</span>
+            <strong>@Model.CompetitionsCount</strong>
+        </article>
+        <article class="stat-card">
+            <span class="stat-label">Участники</span>
+            <strong>@Model.ParticipantCount</strong>
+        </article>
+    </div>
+</section>
+
+<section class="content-grid">
+    <div class="content-card">
+        <div class="section-header">
+            <div>
+                <span class="section-kicker">Ближайшие старты</span>
+                <h2>Актуальные события</h2>
+            </div>
+        </div>
+
+        @if (Model.UpcomingEvents.Count == 0)
+        {
+            <div class="empty-state">События пока не заведены.</div>
+        }
+        else
+        {
+            <div class="stack-list">
+                @foreach (var item in Model.UpcomingEvents)
+                {
+                    <article class="list-card">
+                        <div class="d-flex justify-content-between gap-3 flex-wrap">
+                            <div>
+                                <h3>@item.Title</h3>
+                                <p>@(string.IsNullOrWhiteSpace(item.Description) ? "Описание пока не заполнено." : item.Description)</p>
+                            </div>
+                            <div class="meta-block">
+                                <span>@item.DateStart?.ToString("dd.MM.yyyy HH:mm")</span>
+                                <span>@item.CompetitionCount соревнований</span>
+                            </div>
+                        </div>
+                        <a class="btn btn-sm btn-outline-secondary" asp-controller="Events" asp-action="Details" asp-route-id="@item.Id">Подробнее</a>
+                    </article>
+                }
+            </div>
+        }
+    </div>
+
+    <div class="content-card">
+        <div class="section-header">
+            <div>
+                <span class="section-kicker">Демо-доступ</span>
+                <h2>Предзаполненные аккаунты</h2>
+            </div>
+        </div>
+
+        <div class="stack-list">
+            @foreach (var account in Model.DemoAccounts)
+            {
+                <article class="list-card compact-card">
+                    <div class="d-flex justify-content-between align-items-start gap-2">
+                        <div>
+                            <h3>@account.Role</h3>
+                            <p>@account.Description</p>
+                        </div>
+                        <span class="badge text-bg-dark">@account.Role</span>
+                    </div>
+                    <div class="credential-row"><span>Email</span><code>@account.Email</code></div>
+                    <div class="credential-row"><span>Пароль</span><code>@account.Password</code></div>
+                </article>
+            }
+        </div>
+    </div>
+</section>

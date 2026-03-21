@@ -1,251 +1,202 @@
-﻿using BCrypt.Net;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.EntityFrameworkCore;
 using PhoneNumbers;
+using SportEvents.Web.Constants;
 using SportEvents.Web.Data;
 using SportEvents.Web.Models;
 using SportEvents.Web.Models.Db;
 using System.Security.Claims;
 
-namespace SportEvents.Web.Controllers
+namespace SportEvents.Web.Controllers;
+
+public class UserController : Controller
 {
-    public class UserController : Controller
+    private readonly SportsCompetitionsDbContext db;
+    private readonly PasswordHasher<object> passwordHasher = new();
+
+    public UserController(SportsCompetitionsDbContext db)
     {
-        #region Поля
-        private readonly SportsCompetitionsDbContext db;
+        this.db = db;
+    }
 
-        public UserController(SportsCompetitionsDbContext db)
+    [AllowAnonymous]
+    [HttpGet]
+    public IActionResult Login(string? returnUrl = null)
+    {
+        ViewBag.ReturnUrl = returnUrl;
+        ViewBag.DemoAccounts = DemoAccountCatalog.All;
+        return View(new LoginViewModel());
+    }
+
+    [AllowAnonymous]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
+    {
+        ViewBag.ReturnUrl = returnUrl;
+        ViewBag.DemoAccounts = DemoAccountCatalog.All;
+
+        if (!ModelState.IsValid)
         {
-            this.db = db;
-        }
-        #endregion
-
-        #region Вход (Login)
-
-        [HttpGet]
-        public IActionResult Login(string? returnUrl = null)
-        {
-            ViewBag.returnUrl = returnUrl;
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
-        {
-            if (!ModelState.IsValid)
-                return View(model);
-
-            // 1) найти контакт по email
-            var contact = await db.Contacts.FirstOrDefaultAsync(c => c.email == model.Email);
-            if (contact == null || string.IsNullOrWhiteSpace(contact.passwordHash))
-            {
-                ModelState.AddModelError("", "Неверный email или пароль");
-                return View(model);
-            }
-            // 2) найти пользователя и роль
-            var user = await db.Users.FirstOrDefaultAsync(u => u.idContact == contact.id);
-            if (user == null)
-            {
-                ModelState.AddModelError("", "Пользователь не найден");
-                return View(model);
-            }
-
-            // 3) проверка пароля
-            var hasher = new PasswordHasher<object>();
-            var res = hasher.VerifyHashedPassword(null!, contact.passwordHash, model.Password);
-            if(res == PasswordVerificationResult.Failed)
-            {
-                ModelState.AddModelError("", "Неверный email или пароль");
-                return View(model);
-            }
-            // 4) выдать cookie
-                    var claims = new List<Claim>
-            {
-                new(ClaimTypes.NameIdentifier, user.id.ToString()),
-                new(ClaimTypes.Name, contact.email),
-                //new(ClaimTypes.Role, user.Rol?.Title ?? "Пользователь"),
-                //new("contactId", contact.Id.ToString())
-            };
-
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(identity),
-                new AuthenticationProperties { IsPersistent = model.RememberMe });
-
-            if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
-                return Redirect(returnUrl);
-
-            return RedirectToAction("StartPage", "Home");
-        }
-        #endregion
-
-        #region Регистрация (Register)
-
-        [HttpGet]
-        public IActionResult Register() => View(new RegisterViewModel());
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            // Проверка номера телефона
-            if (!IsValidPhone(model.Phone))
-            {
-                ModelState.AddModelError(nameof(model.Phone), "Неверный номер телефона.");
-                return View(model);
-            }
-
-
-            if (await db.Contacts.AnyAsync(c=> c.email == model.Email))
-            {
-                ModelState.AddModelError(nameof(model.Email), "Пользователь с таким email уже существует.");
-                return View(model);
-            }
-
-            // хэшируем пароль
-            var hasher_reg = new PasswordHasher<object>();
-            var passwordHash = hasher_reg.HashPassword(null!, model.Password);
-            //Bcrypt превращает пароль в безопасный хеш
-
-            // 1) создаём Contact
-            var contact = new Contact
-            {
-                firstname = model.FirstName,
-                lastname = model.LastName,
-                middlename = model.MiddleName,
-                birthDate = model.BirthDate,
-                sex = model.Sex,
-                phone = model.Phone,
-                email = model.Email,
-                passwordHash = passwordHash
-            };
-
-            db.Contacts.Add(contact);
-            await db.SaveChangesAsync();
-
-            // 2) создаём User: роль можно поставить "Пользователь" (или "Участник" — как решишь)
-            // ищем роль "Пользователь"
-            var role = await db.Roles.FirstOrDefaultAsync(r => r.title == "Пользователь");
-
-            var user = new User
-            {
-                idContact = contact.id,
-                idRole = role.id
-            };
-
-            db.Users.Add(user);
-            await db.SaveChangesAsync();
-
-            // пока просто редирект на вход
-            return RedirectToAction("Login");
+            return View(model);
         }
 
-        private bool IsValidPhone(string phone)
-        {
-            var phoneUtil = PhoneNumberUtil.GetInstance();
+        var user = await db.Users
+            .Include(item => item.idContactNavigation)
+            .Include(item => item.idRoleNavigation)
+            .FirstOrDefaultAsync(item => item.idContactNavigation != null && item.idContactNavigation.email == model.Email);
 
-            try
-            {
-                var number = phoneUtil.Parse(phone, null);
-                return phoneUtil.IsValidNumber(number);
-            }
-            catch
-            {
-                return false;
-            }
+        var contact = user?.idContactNavigation;
+        if (user is null || contact is null || string.IsNullOrWhiteSpace(contact.passwordHash))
+        {
+            ModelState.AddModelError("", "Неверный email или пароль");
+            return View(model);
         }
 
-
-
-        #endregion
-
-        #region CRUD
-        // GET: UserController
-        public ActionResult Index()
+        var verificationResult = passwordHasher.VerifyHashedPassword(null!, contact.passwordHash, model.Password);
+        if (verificationResult == PasswordVerificationResult.Failed)
         {
-            return View();
+            ModelState.AddModelError("", "Неверный email или пароль");
+            return View(model);
         }
 
-        // GET: UserController/Details/5
-        public ActionResult Details(int id)
+        await SignInAsync(user, contact, model.RememberMe);
+
+        if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
         {
-            return View();
+            return Redirect(returnUrl);
         }
 
-        // GET: UserController/Create
-        public ActionResult Create()
+        return RedirectToAction("StartPage", "Home");
+    }
+
+    [AllowAnonymous]
+    [HttpGet]
+    public IActionResult Register()
+    {
+        return View(new RegisterViewModel());
+    }
+
+    [AllowAnonymous]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Register(RegisterViewModel model)
+    {
+        if (!ModelState.IsValid)
         {
-            return View();
+            return View(model);
         }
 
-        // POST: UserController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        if (!IsValidPhone(model.Phone))
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            ModelState.AddModelError(nameof(model.Phone), "Неверный номер телефона.");
+            return View(model);
         }
 
-        // GET: UserController/Edit/5
-        public ActionResult Edit(int id)
+        if (await db.Contacts.AnyAsync(item => item.email == model.Email))
         {
-            return View();
+            ModelState.AddModelError(nameof(model.Email), "Пользователь с таким email уже существует.");
+            return View(model);
         }
 
-        // POST: UserController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        var contact = new Contact
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            firstname = model.FirstName,
+            lastname = model.LastName,
+            middlename = model.MiddleName,
+            birthDate = model.BirthDate,
+            sex = model.Sex,
+            phone = model.Phone,
+            email = model.Email,
+            passwordHash = passwordHasher.HashPassword(null!, model.Password)
+        };
+
+        db.Contacts.Add(contact);
+        await db.SaveChangesAsync();
+
+        var role = await GetRoleAsync(AppRoles.Participant);
+        var user = new User
+        {
+            idContact = contact.id,
+            idRole = role.id,
+            idRoleNavigation = role
+        };
+
+        db.Users.Add(user);
+        db.Participants.Add(new Participant { idContact = contact.id });
+        await db.SaveChangesAsync();
+
+        await SignInAsync(user, contact, false);
+        return RedirectToAction("StartPage", "Home");
+    }
+
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToAction("Index", "Home");
+    }
+
+    [AllowAnonymous]
+    [HttpGet]
+    public IActionResult AccessDenied()
+    {
+        return View();
+    }
+
+    private bool IsValidPhone(string phone)
+    {
+        var phoneUtil = PhoneNumberUtil.GetInstance();
+
+        try
+        {
+            var number = phoneUtil.Parse(phone, "RU");
+            return phoneUtil.IsValidNumber(number);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private async Task<Role> GetRoleAsync(string roleTitle)
+    {
+        var role = await db.Roles.FirstOrDefaultAsync(item => item.title == roleTitle);
+        if (role is null)
+        {
+            throw new InvalidOperationException($"Роль '{roleTitle}' не найдена.");
         }
 
-        // GET: UserController/Delete/5
-        public ActionResult Delete(int id)
+        return role;
+    }
+
+    private async Task SignInAsync(User user, Contact contact, bool isPersistent)
+    {
+        var claims = new List<Claim>
         {
-            return View();
+            new(ClaimTypes.NameIdentifier, user.id.ToString()),
+            new(ClaimTypes.Name, contact.email),
+            new(ClaimTypes.Email, contact.email),
+            new(ClaimTypes.GivenName, contact.firstname),
+            new(ClaimTypes.Surname, contact.lastname),
+            new("contactId", contact.id.ToString())
+        };
+
+        if (!string.IsNullOrWhiteSpace(user.idRoleNavigation?.title))
+        {
+            claims.Add(new Claim(ClaimTypes.Role, user.idRoleNavigation.title));
         }
 
-        // POST: UserController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-        #endregion
+        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        await HttpContext.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            new ClaimsPrincipal(identity),
+            new AuthenticationProperties { IsPersistent = isPersistent });
     }
 }

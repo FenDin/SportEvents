@@ -1,0 +1,58 @@
+@model AdminUsersViewModel
+@{
+    ViewData["Title"] = "Роли и пользователи";
+}
+
+<section class="section-shell">
+    <div class="section-header">
+        <div>
+            <span class="section-kicker">Администрирование</span>
+            <h1>Назначение ролей</h1>
+        </div>
+    </div>
+
+    <div class="content-card">
+        @if (Model.Users.Count == 0)
+        {
+            <div class="empty-state">Пользователи не найдены.</div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Пользователь</th>
+                            <th>Email</th>
+                            <th>Текущая роль</th>
+                            <th>Назначение</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.Users)
+                        {
+                            <tr>
+                                <td>@user.FullName</td>
+                                <td><code>@user.Email</code></td>
+                                <td><span class="badge text-bg-dark">@user.RoleTitle</span></td>
+                                <td>
+                                    <form asp-action="ChangeRole" method="post" class="d-flex gap-2 flex-wrap">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="userId" value="@user.UserId" />
+                                        <select name="roleId" class="form-select admin-select">
+                                            @foreach (var option in user.AvailableRoles)
+                                            {
+                                                <option value="@option.Value" selected="@(option.Selected ? "selected" : null)">@option.Text</option>
+                                            }
+                                        </select>
+                                        <button type="submit" class="btn btn-outline-secondary">Сохранить</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</section>

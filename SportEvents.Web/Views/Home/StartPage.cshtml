@@ -1,8 +1,101 @@
-﻿@{
-    ViewData["Title"] = "Start Page";
+@model HomeOverviewViewModel
+@{
+    ViewData["Title"] = "Кабинет";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Поздравляю, вы вошли на данный сайт</h1>
-    <p>Здесь пока ничего нету:) но скоро будет. По вопросам можно писать <a href="https://vk.com/fendin"> на мою личную страницу VK</a>.</p>
-</div>
+<section class="hero-panel compact-hero">
+    <div>
+        <span class="section-kicker">Личный кабинет</span>
+        <h1>@(string.IsNullOrWhiteSpace(Model.UserDisplayName) ? "Вы вошли в систему" : $"{Model.UserDisplayName}, доступ активен")</h1>
+        <p class="lead-text">
+            Текущая роль:
+            <span class="badge text-bg-dark">@Model.CurrentRole</span>
+        </p>
+        <div class="d-flex flex-wrap gap-2 mt-3">
+            <a class="btn btn-accent" asp-controller="Events" asp-action="Index">Каталог событий</a>
+            <a class="btn btn-outline-secondary" asp-controller="Competitions" asp-action="Index">Каталог соревнований</a>
+            @if (User.IsInRole(AppRoles.Administrator))
+            {
+                <a class="btn btn-outline-secondary" asp-controller="Admin" asp-action="Index">Управление ролями</a>
+            }
+        </div>
+    </div>
+    <div class="stats-grid">
+        <article class="stat-card">
+            <span class="stat-label">События</span>
+            <strong>@Model.EventsCount</strong>
+        </article>
+        <article class="stat-card">
+            <span class="stat-label">Соревнования</span>
+            <strong>@Model.CompetitionsCount</strong>
+        </article>
+        <article class="stat-card">
+            <span class="stat-label">Участники</span>
+            <strong>@Model.ParticipantCount</strong>
+        </article>
+    </div>
+</section>
+
+<section class="content-grid">
+    <div class="content-card">
+        <div class="section-header">
+            <div>
+                <span class="section-kicker">Что доступно</span>
+                <h2>Права текущей роли</h2>
+            </div>
+        </div>
+        <div class="stack-list">
+            @if (User.IsInRole(AppRoles.Administrator))
+            {
+                <article class="list-card">
+                    <h3>Администратор</h3>
+                    <p>Может управлять событиями, соревнованиями и назначением ролей пользователям.</p>
+                </article>
+            }
+            @if (User.IsInRole(AppRoles.Organizer))
+            {
+                <article class="list-card">
+                    <h3>Организатор</h3>
+                    <p>Может создавать, редактировать и удалять события и соревнования.</p>
+                </article>
+            }
+            @if (User.IsInRole(AppRoles.Participant))
+            {
+                <article class="list-card">
+                    <h3>Участник</h3>
+                    <p>Может записываться на соревнования и отслеживать доступные старты.</p>
+                </article>
+            }
+            @if (User.IsInRole(AppRoles.User))
+            {
+                <article class="list-card">
+                    <h3>Пользователь</h3>
+                    <p>Имеет доступ к просмотру каталога событий и соревнований.</p>
+                </article>
+            }
+        </div>
+    </div>
+
+    <div class="content-card">
+        <div class="section-header">
+            <div>
+                <span class="section-kicker">Ближайшее</span>
+                <h2>События под рукой</h2>
+            </div>
+        </div>
+        <div class="stack-list">
+            @foreach (var item in Model.UpcomingEvents)
+            {
+                <article class="list-card">
+                    <h3>@item.Title</h3>
+                    <p>@(string.IsNullOrWhiteSpace(item.Description) ? "Описание пока не заполнено." : item.Description)</p>
+                    <div class="meta-row">
+                        <span>@item.DateStart?.ToString("dd.MM.yyyy HH:mm")</span>
+                        <span>@item.CompetitionCount соревнований</span>
+                    </div>
+                    <a class="btn btn-sm btn-outline-secondary" asp-controller="Events" asp-action="Details" asp-route-id="@item.Id">Открыть</a>
+                </article>
+            }
+        </div>
+    </div>
+</section>

@@ -1,0 +1,21 @@
+@model EventDetailsViewModel
+@{
+    ViewData["Title"] = "Удалить событие";
+}
+
+<section class="content-card narrow-card">
+    <span class="section-kicker">Удаление</span>
+    <h1>@Model.Title</h1>
+    <p class="lead-text">Событие будет удалено вместе со связями на соревнования. Сами соревнования останутся в каталоге только если не были привязаны к этому событию вручную после удаления.</p>
+    <div class="meta-row">
+        <span>Начало: @Model.DateStart?.ToString("dd.MM.yyyy HH:mm")</span>
+        <span>Окончание: @Model.DateEnd?.ToString("dd.MM.yyyy HH:mm")</span>
+        <span>Связей: @Model.Competitions.Count</span>
+    </div>
+    <form asp-action="Delete" method="post" class="d-flex gap-2 mt-4">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Удалить</button>
+        <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@Model.Id">Отмена</a>
+    </form>
+</section>

@@ -1,26 +1,85 @@
-﻿@model SportEvents.Web.Models.RegisterViewModel
+@model LoginViewModel
 @{
     ViewData["Title"] = "Вход";
     var returnUrl = ViewBag.ReturnUrl as string;
+    var demoAccounts = ViewBag.DemoAccounts as IReadOnlyList<DemoAccountDefinition> ?? Array.Empty<DemoAccountDefinition>();
 }
 
-<main class="form-centered">
-    <form method="post">
-        <h1 class="h3 mb-3 fw-normal">Вход</h1>
-        <div class="form-floating mb-2">
-            <input asp-for="Email" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-            <label asp-for="Email">Email</label>
+<section class="auth-grid">
+    <div class="content-card">
+        <span class="section-kicker">Авторизация</span>
+        <h1>Войти в SportEvents</h1>
+        <p class="lead-text">Сессия работает через cookie-аутентификацию. После входа интерфейс будет адаптирован под вашу роль.</p>
+
+        <form asp-action="Login" method="post" class="stack-list mt-4">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="returnUrl" value="@returnUrl" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div>
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" autocomplete="username" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div>
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" autocomplete="current-password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-check">
+                <input asp-for="RememberMe" class="form-check-input" />
+                <label asp-for="RememberMe" class="form-check-label"></label>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2">
+                <button type="submit" class="btn btn-accent">Войти</button>
+                <a class="btn btn-outline-secondary" asp-action="Register">Создать аккаунт</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="content-card">
+        <div class="section-header">
+            <div>
+                <span class="section-kicker">Быстрый доступ</span>
+                <h2>Демо-аккаунты</h2>
+            </div>
         </div>
-        <div class="form-floating mb-2">
-            <input asp-for="Password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
-            <label asp-for="Password">Пароль</label>
+        <div class="stack-list">
+            @foreach (var account in demoAccounts)
+            {
+                <article class="list-card compact-card">
+                    <div class="d-flex justify-content-between align-items-start gap-2">
+                        <div>
+                            <h3>@account.Role</h3>
+                            <p>@account.Description</p>
+                        </div>
+                        <button type="button"
+                                class="btn btn-sm btn-outline-secondary js-demo-fill"
+                                data-email="@account.Email"
+                                data-password="@account.Password">
+                            Подставить
+                        </button>
+                    </div>
+                    <div class="credential-row"><span>Email</span><code>@account.Email</code></div>
+                    <div class="credential-row"><span>Пароль</span><code>@account.Password</code></div>
+                </article>
+            }
         </div>
-        <div class="form-check text-start my-3">
-            <input class="form-check-input" type="checkbox" value="remember-me" id="checkDefault">
-            <label class="form-check-label" for="checkDefault">
-                Запомнить
-            </label>
-        </div>
-        <button class="btn btn-primary w-100 py-2" type="submit">Войти</button>
-    </form>
-</main>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.querySelectorAll(".js-demo-fill").forEach(function (button) {
+            button.addEventListener("click", function () {
+                document.getElementById("@Html.IdFor(model => model.Email)").value = button.dataset.email;
+                document.getElementById("@Html.IdFor(model => model.Password)").value = button.dataset.password;
+            });
+        });
+    </script>
+}

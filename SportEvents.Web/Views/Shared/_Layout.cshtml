@@ -1,85 +1,99 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+@using System.Security.Claims
+@{
+    var isAuthenticated = User.Identity?.IsAuthenticated ?? false;
+    var role = User.FindFirstValue(ClaimTypes.Role);
+    var displayName = string.Join(" ", new[]
+    {
+        User.FindFirstValue(ClaimTypes.GivenName),
+        User.FindFirstValue(ClaimTypes.Surname)
+    }.Where(item => !string.IsNullOrWhiteSpace(item)));
+
+    if (string.IsNullOrWhiteSpace(displayName))
+    {
+        displayName = User.Identity?.Name ?? "Пользователь";
+    }
+}
+<!DOCTYPE html>
+<html lang="ru">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - SportEvents.Web</title>
+    <title>@ViewData["Title"] - SportEvents</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SportEvents.Web.styles.css" asp-append-version="true" />
-
-    <!-- #region Input-Phone -->
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.11/build/css/intlTelInput.css" />
-    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.11/build/js/intlTelInput.min.js"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.11/build/js/utils.js"></script>
-    <script src="~/js/input-phone.js" asp-append-version="true"></script>
-    <!-- #endregion -->
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Offcanvas navbar large">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-controller="Home" asp-action="Index">Спортивные соревнования</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar2" aria-controls="offcanvasNavbar2" aria-label="Toggle navigation">
+    <header class="site-header">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <a class="navbar-brand fw-semibold" asp-controller="Home" asp-action="Index">SportEvents</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasNavbar2" aria-labelledby="offcanvasNavbar2Label">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="offcanvasNavbar2Label">Меню</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                    <div class="offcanvas-body">
-                        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                            <li class="nav-item"> <a class="nav-link" aria-current="page" href="#">События</a> </li>
-                            <li class="nav-item"> <a class="nav-link" href="#">Соревнования</a> </li>
-                            <li class="nav-item"> <a class="nav-link" href="#">Участники</a> </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Список действий
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Добавить</a></li>
-                                    <li><a class="dropdown-item" href="#">Редактировать</a></li>
-                                    <li><a class="dropdown-item" href="#">Удалить</a></li>
-                                </ul>
-                            </li>
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Events" asp-action="Index">События</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Competitions" asp-action="Index">Соревнования</a>
+                        </li>
+                        @if (isAuthenticated)
+                        {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Test" asp-action="Controls">Тест контролов</a>
+                                <a class="nav-link" asp-controller="Home" asp-action="StartPage">Кабинет</a>
                             </li>
-                        </ul>
-                        <form class="d-flex mt-3 mt-lg-0" role="search">
+                        }
+                        @if (User.IsInRole(AppRoles.Administrator))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Admin" asp-action="Index">Роли и пользователи</a>
+                            </li>
+                        }
+                    </ul>
 
-                            <a class="btn btn-outline-light me-2"
-                               asp-controller="User"
-                               asp-action="Login">
-                                Вход
-                            </a>
+                    <div class="d-flex align-items-center gap-2">
+                        @if (isAuthenticated)
+                        {
+                            <div class="user-pill">
+                                <span class="fw-semibold">@displayName</span>
+                                @if (!string.IsNullOrWhiteSpace(role))
+                                {
+                                    <span class="badge text-bg-light">@role</span>
+                                }
+                            </div>
 
-                            <a class="btn btn-outline-light"
-                               asp-controller="User"
-                               asp-action="Register">
-                                Регистрация
-                            </a>
-                        </form>
+                            <form asp-controller="User" asp-action="Logout" method="post" class="m-0">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-outline-light">Выйти</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <a class="btn btn-outline-light" asp-controller="User" asp-action="Login">Вход</a>
+                            <a class="btn btn-accent" asp-controller="User" asp-action="Register">Регистрация</a>
+                        }
                     </div>
                 </div>
             </div>
         </nav>
     </header>
 
-    <div class="container">
-        <main role="main" class="pb-3">
+    <div class="container page-shell">
+        <main role="main" class="pb-4">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - SportEvents.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="site-footer">
+        <div class="container d-flex flex-column flex-md-row justify-content-between gap-2">
+            <span>&copy; 2026 SportEvents</span>
+            <span>Платформа для просмотра и управления спортивными событиями</span>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
