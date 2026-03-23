@@ -6,6 +6,13 @@
 <section class="hero-panel compact-hero">
     <div>
         <span class="section-kicker">Личный кабинет</span>
+        <div class="hero-identity mt-3">
+            <img src="@Model.CurrentUserPhotoUrl" alt="Фото пользователя" class="avatar-media avatar-media-lg" />
+            <div>
+                <div class="stat-label">Профиль</div>
+                <div class="lead-text mb-0">Личный доступ и персональные данные пользователя.</div>
+            </div>
+        </div>
         <h1>@(string.IsNullOrWhiteSpace(Model.UserDisplayName) ? "Вы вошли в систему" : $"{Model.UserDisplayName}, доступ активен")</h1>
         <p class="lead-text">
             Текущая роль:
@@ -87,11 +94,16 @@
             @foreach (var item in Model.UpcomingEvents)
             {
                 <article class="list-card">
-                    <h3>@item.Title</h3>
-                    <p>@(string.IsNullOrWhiteSpace(item.Description) ? "Описание пока не заполнено." : item.Description)</p>
-                    <div class="meta-row">
-                        <span>@item.DateStart?.ToString("dd.MM.yyyy HH:mm")</span>
-                        <span>@item.CompetitionCount соревнований</span>
+                    <div class="entity-card-grid">
+                        <img src="@item.PhotoUrl" alt="@item.Title" class="cover-media cover-media-sm" />
+                        <div>
+                            <h3>@item.Title</h3>
+                            <p>@(string.IsNullOrWhiteSpace(item.Description) ? "Описание пока не заполнено." : item.Description)</p>
+                            <div class="meta-row">
+                                <span>@item.DateStart?.ToString("dd.MM.yyyy HH:mm")</span>
+                                <span>@item.CompetitionCount соревнований</span>
+                            </div>
+                        </div>
                     </div>
                     <a class="btn btn-sm btn-outline-secondary" asp-controller="Events" asp-action="Details" asp-route-id="@item.Id">Открыть</a>
                 </article>

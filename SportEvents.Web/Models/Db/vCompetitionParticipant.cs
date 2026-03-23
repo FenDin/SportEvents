@@ -11,6 +11,8 @@ public partial class vCompetitionParticipant
 
     public string? CompetitionDescription { get; set; }
 
+    public string? CompetitionPhotoUrl { get; set; }
+
     public DateTime? CompetitionDateStart { get; set; }
 
     public DateTime? CompetitionDateEnd { get; set; }
@@ -50,6 +52,8 @@ public partial class vCompetitionParticipant
     public string? Phone { get; set; }
 
     public string Email { get; set; } = null!;
+
+    public string? PhotoUrl { get; set; }
 
     public string? PasswordHash { get; set; }
 }

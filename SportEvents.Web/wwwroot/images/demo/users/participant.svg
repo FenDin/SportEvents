@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" role="img" aria-labelledby="title desc">
+  <title id="title">Participant avatar</title>
+  <desc id="desc">Avatar for participant demo user.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4a1d2d"/>
+      <stop offset="100%" stop-color="#cf7a4b"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="640" rx="96" fill="url(#bg)"/>
+  <circle cx="320" cy="218" r="102" fill="#fff8f3"/>
+  <path d="M168 542c22-96 92-154 152-154s130 58 152 154" fill="#fff8f3"/>
+  <circle cx="320" cy="126" r="44" fill="#ffd48a"/>
+  <path d="M320 152v70" fill="none" stroke="#ffd48a" stroke-width="16" stroke-linecap="round"/>
+  <path d="M274 198h92" fill="none" stroke="#ffd48a" stroke-width="16" stroke-linecap="round"/>
+  <text x="320" y="602" fill="#fff1e7" font-size="40" text-anchor="middle" font-family="Verdana, Arial, sans-serif">ATH</text>
+</svg>

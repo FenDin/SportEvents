@@ -7,11 +7,132 @@
     <div class="section-header">
         <div>
             <span class="section-kicker">Администрирование</span>
-            <h1>Назначение ролей</h1>
+            <h1>Роли и пользователи</h1>
         </div>
     </div>
 
+    @if (!string.IsNullOrWhiteSpace(Model.StatusMessage))
+    {
+        <div class="alert alert-@Model.StatusType" role="alert">
+            @Model.StatusMessage
+        </div>
+    }
+
+    <div class="content-card mb-4">
+        <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
+            <div>
+                <h2 class="h4 mb-2">Тестовый сброс базы данных</h2>
+                <p class="mb-0 text-muted">
+                    Удаляет текущую базу, заново создаёт схему и возвращает тестовые роли, события и демо-аккаунты.
+                </p>
+            </div>
+
+            <form asp-action="ResetDatabase"
+                  method="post"
+                  onsubmit="return confirm('Сбросить базу данных? Все текущие данные будут удалены.');">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-outline-danger">Сбросить БД</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="content-card mb-4">
+        <div class="section-header">
+            <div>
+                <span class="section-kicker">Роли</span>
+                <h2>Управление ролями</h2>
+            </div>
+        </div>
+
+        <form asp-action="CreateRole" method="post" class="row g-2 align-items-end mb-4">
+            @Html.AntiForgeryToken()
+            <div class="col-md-8 col-lg-6">
+                <label class="form-label" asp-for="CreateRole.Title"></label>
+                <input asp-for="CreateRole.Title" class="form-control" placeholder="Например, Менеджер команды" />
+            </div>
+            <div class="col-md-auto">
+                <button type="submit" class="btn btn-outline-primary">Добавить роль</button>
+            </div>
+        </form>
+
+        @if (Model.Roles.Count == 0)
+        {
+            <div class="empty-state">Роли не найдены.</div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Роль</th>
+                            <th>Тип</th>
+                            <th>Пользователи</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var role in Model.Roles)
+                        {
+                            <tr>
+                                <td>
+                                    @if (role.IsSystemRole)
+                                    {
+                                        <div class="fw-semibold">@role.Title</div>
+                                    }
+                                    else
+                                    {
+                                        <form asp-action="UpdateRole" method="post" class="d-flex gap-2 flex-wrap">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="roleId" value="@role.RoleId" />
+                                            <input type="text" name="title" value="@role.Title" class="form-control admin-select" />
+                                            <button type="submit" class="btn btn-outline-secondary">Сохранить</button>
+                                        </form>
+                                    }
+                                </td>
+                                <td>
+                                    @if (role.IsSystemRole)
+                                    {
+                                        <span class="badge text-bg-dark">Системная</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge text-bg-light">Пользовательская</span>
+                                    }
+                                </td>
+                                <td>@role.UserCount</td>
+                                <td>
+                                    @if (role.IsSystemRole)
+                                    {
+                                        <span class="text-muted">Изменение недоступно</span>
+                                    }
+                                    else
+                                    {
+                                        <form asp-action="DeleteRole"
+                                              method="post"
+                                              onsubmit="return confirm('Удалить роль @role.Title?');">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="roleId" value="@role.RoleId" />
+                                            <button type="submit" class="btn btn-outline-danger">Удалить</button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
     <div class="content-card">
+        <div class="section-header">
+            <div>
+                <span class="section-kicker">Пользователи</span>
+                <h2>Управление пользователями</h2>
+            </div>
+        </div>
+
         @if (Model.Users.Count == 0)
         {
             <div class="empty-state">Пользователи не найдены.</div>
@@ -26,13 +147,25 @@
                             <th>Email</th>
                             <th>Текущая роль</th>
                             <th>Назначение</th>
+                            <th>Действия</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var user in Model.Users)
                         {
                             <tr>
-                                <td>@user.FullName</td>
+                                <td>
+                                    <div class="user-row">
+                                        <img src="@user.PhotoUrl" alt="@user.FullName" class="avatar-media avatar-media-sm" />
+                                        <div>
+                                            <div class="fw-semibold">@user.FullName</div>
+                                            @if (user.IsCurrentUser)
+                                            {
+                                                <span class="badge text-bg-light">Вы</span>
+                                            }
+                                        </div>
+                                    </div>
+                                </td>
                                 <td><code>@user.Email</code></td>
                                 <td><span class="badge text-bg-dark">@user.RoleTitle</span></td>
                                 <td>
@@ -47,6 +180,9 @@
                                         </select>
                                         <button type="submit" class="btn btn-outline-secondary">Сохранить</button>
                                     </form>
+                                </td>
+                                <td>
+                                    <a class="btn btn-outline-primary" asp-action="EditUser" asp-route-id="@user.UserId">Редактировать</a>
                                 </td>
                             </tr>
                         }

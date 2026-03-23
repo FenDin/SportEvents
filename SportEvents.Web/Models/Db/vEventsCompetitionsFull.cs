@@ -9,6 +9,8 @@ public partial class vEventsCompetitionsFull
 
     public string EventTitle { get; set; } = null!;
 
+    public string? EventPhotoUrl { get; set; }
+
     public DateTime? EventDateStart { get; set; }
 
     public DateTime? EventDateEnd { get; set; }
@@ -16,6 +18,8 @@ public partial class vEventsCompetitionsFull
     public int CompetitionId { get; set; }
 
     public string CompetitionTitle { get; set; } = null!;
+
+    public string? CompetitionPhotoUrl { get; set; }
 
     public DateTime? CompetitionDateStart { get; set; }
 

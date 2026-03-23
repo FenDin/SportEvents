@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Swimming competition</title>
+  <desc id="desc">Illustration for the swimming competition.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#08324e"/>
+      <stop offset="100%" stop-color="#2fa9d4"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="720" rx="48" fill="url(#bg)"/>
+  <text x="90" y="142" fill="#e4fbff" font-size="28" font-family="Verdana, Arial, sans-serif">SWIMMING</text>
+  <text x="86" y="308" fill="#ffffff" font-size="86" font-weight="700" font-family="Verdana, Arial, sans-serif">Pool Race</text>
+  <text x="90" y="376" fill="#dff9ff" font-size="34" font-family="Verdana, Arial, sans-serif">Short course freestyle start</text>
+  <path d="M768 474c24 12 48 18 72 18s48-6 72-18 48-18 72-18 48 6 72 18 48 18 72 18" fill="none" stroke="#dff9ff" stroke-width="14" stroke-linecap="round"/>
+  <path d="M768 530c24 12 48 18 72 18s48-6 72-18 48-18 72-18 48 6 72 18 48 18 72 18" fill="none" stroke="#dff9ff" stroke-width="14" stroke-linecap="round"/>
+  <path d="M836 382l98 18 72-34" fill="none" stroke="#ffffff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="924" cy="374" r="24" fill="#ffd893"/>
+</svg>

@@ -15,5 +15,7 @@ public partial class Event
 
     public DateTime? dateEnd { get; set; }
 
+    public string? photoUrl { get; set; }
+
     public virtual ICollection<EventsCompetition> EventsCompetitions { get; set; } = new List<EventsCompetition>();
 }

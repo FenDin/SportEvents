@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" role="img" aria-labelledby="title desc">
+  <title id="title">Organizer avatar</title>
+  <desc id="desc">Avatar for organizer demo user.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#233d28"/>
+      <stop offset="100%" stop-color="#5ba882"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="640" rx="96" fill="url(#bg)"/>
+  <circle cx="320" cy="218" r="102" fill="#f5fff7"/>
+  <path d="M168 542c22-96 92-154 152-154s130 58 152 154" fill="#f5fff7"/>
+  <rect x="234" y="92" width="172" height="68" rx="20" fill="#e8fff1"/>
+  <path d="M246 124h148" fill="none" stroke="#5ba882" stroke-width="12" stroke-linecap="round"/>
+  <path d="M246 148h96" fill="none" stroke="#5ba882" stroke-width="12" stroke-linecap="round"/>
+  <text x="320" y="602" fill="#e4fff0" font-size="40" text-anchor="middle" font-family="Verdana, Arial, sans-serif">ORG</text>
+</svg>

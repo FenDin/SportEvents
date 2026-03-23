@@ -35,7 +35,8 @@
             @foreach (var item in Model.Items)
             {
                 <article class="list-card">
-                    <div class="d-flex justify-content-between gap-3 flex-wrap">
+                    <div class="entity-card-grid">
+                        <img src="@item.PhotoUrl" alt="@item.Title" class="cover-media cover-media-md" />
                         <div>
                             <h2>@item.Title</h2>
                             <p>@(string.IsNullOrWhiteSpace(item.Description) ? "Описание пока не заполнено." : item.Description)</p>

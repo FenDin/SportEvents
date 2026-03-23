@@ -48,6 +48,7 @@ CREATE TABLE [Competition]
   [idSportSubType] int NOT NULL ,
   [title] nvarchar(255) NOT NULL ,
   [description] nvarchar(255) ,
+  [photoUrl] nvarchar(512) ,
   [dateStart] datetime ,
   [dateEnd] datetime ,
   PRIMARY KEY ([id])
@@ -59,6 +60,7 @@ CREATE TABLE [Event]
   [id] int IDENTITY (1, 1) ,
   [title] nvarchar(255) NOT NULL ,
   [description] nvarchar(255) ,
+  [photoUrl] nvarchar(512) ,
   [dateStart] datetime ,
   [dateEnd] datetime ,
   PRIMARY KEY ([id])
@@ -102,6 +104,7 @@ CREATE TABLE [Contact]
   [sex] bit NOT NULL ,
   [phone] nvarchar(20) ,
   [email] nvarchar(255) NOT NULL ,
+  [photoUrl] nvarchar(512) ,
   [passwordHash] nvarchar(255) ,
   PRIMARY KEY ([id])
 ) ON [PRIMARY]

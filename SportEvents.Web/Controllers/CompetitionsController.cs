@@ -35,6 +35,7 @@ public class CompetitionsController : Controller
                 Id = item.id,
                 Title = item.title,
                 Description = item.description,
+                PhotoUrl = MediaCatalog.CompetitionPhotoOrDefault(item.photoUrl),
                 DateStart = item.dateStart,
                 DateEnd = item.dateEnd,
                 SportTitle = item.idSportSubTypeNavigation.idSportTypeNavigation.idSportNavigation.title,
@@ -77,6 +78,7 @@ public class CompetitionsController : Controller
             Id = competition.id,
             Title = competition.title,
             Description = competition.description,
+            PhotoUrl = MediaCatalog.CompetitionPhotoOrDefault(competition.photoUrl),
             DateStart = competition.dateStart,
             DateEnd = competition.dateEnd,
             SportTitle = competition.idSportSubTypeNavigation.idSportTypeNavigation.idSportNavigation.title,
@@ -91,6 +93,7 @@ public class CompetitionsController : Controller
                 {
                     Id = link.idEventNavigation.id,
                     Title = link.idEventNavigation.title,
+                    PhotoUrl = MediaCatalog.EventPhotoOrDefault(link.idEventNavigation.photoUrl),
                     DateStart = link.idEventNavigation.dateStart,
                     DateEnd = link.idEventNavigation.dateEnd
                 })
@@ -132,6 +135,7 @@ public class CompetitionsController : Controller
             description = model.Description,
             dateStart = model.DateStart,
             dateEnd = model.DateEnd,
+            photoUrl = NormalizePhotoUrl(model.PhotoUrl),
             idSportSubType = model.SportSubTypeId!.Value
         };
 
@@ -169,6 +173,7 @@ public class CompetitionsController : Controller
             Description = competition.description,
             DateStart = competition.dateStart,
             DateEnd = competition.dateEnd,
+            PhotoUrl = competition.photoUrl,
             SportSubTypeId = competition.idSportSubType,
             EventId = competition.EventsCompetitions.OrderBy(link => link.id).Select(link => (int?)link.idEvent).FirstOrDefault()
         };
@@ -208,6 +213,7 @@ public class CompetitionsController : Controller
         competition.description = model.Description;
         competition.dateStart = model.DateStart;
         competition.dateEnd = model.DateEnd;
+        competition.photoUrl = NormalizePhotoUrl(model.PhotoUrl);
         competition.idSportSubType = model.SportSubTypeId!.Value;
 
         db.EventsCompetitions.RemoveRange(competition.EventsCompetitions.Where(link => link.idEvent != model.EventId));
@@ -242,6 +248,7 @@ public class CompetitionsController : Controller
             Id = competition.id,
             Title = competition.title,
             Description = competition.description,
+            PhotoUrl = MediaCatalog.CompetitionPhotoOrDefault(competition.photoUrl),
             DateStart = competition.dateStart,
             DateEnd = competition.dateEnd,
             SportTitle = competition.idSportSubTypeNavigation.idSportTypeNavigation.idSportNavigation.title,
@@ -253,6 +260,7 @@ public class CompetitionsController : Controller
                 {
                     Id = link.idEventNavigation.id,
                     Title = link.idEventNavigation.title,
+                    PhotoUrl = MediaCatalog.EventPhotoOrDefault(link.idEventNavigation.photoUrl),
                     DateStart = link.idEventNavigation.dateStart,
                     DateEnd = link.idEventNavigation.dateEnd
                 })
@@ -294,10 +302,18 @@ public class CompetitionsController : Controller
             return Forbid();
         }
 
-        var competitionExists = await db.Competitions.AnyAsync(item => item.id == id);
-        if (!competitionExists)
+        var competition = await db.Competitions
+            .AsNoTracking()
+            .FirstOrDefaultAsync(item => item.id == id);
+
+        if (competition is null)
         {
             return NotFound();
+        }
+
+        if (!IsCompetitionActual(competition.dateEnd))
+        {
+            return Forbid();
         }
 
         var alreadyEnrolled = await db.ParticipantsCompetitions.AnyAsync(item =>
@@ -324,6 +340,20 @@ public class CompetitionsController : Controller
     {
         var participant = await GetCurrentParticipantAsync();
         if (participant is null)
+        {
+            return Forbid();
+        }
+
+        var competition = await db.Competitions
+            .AsNoTracking()
+            .FirstOrDefaultAsync(item => item.id == id);
+
+        if (competition is null)
+        {
+            return NotFound();
+        }
+
+        if (!IsCompetitionActual(competition.dateEnd))
         {
             return Forbid();
         }
@@ -458,6 +488,11 @@ public class CompetitionsController : Controller
         };
     }
 
+    private static bool IsCompetitionActual(DateTime? dateEnd)
+    {
+        return !dateEnd.HasValue || dateEnd.Value.Date >= DateTime.Today;
+    }
+
     private void ValidateCompetition(CompetitionEditViewModel model)
     {
         if (model.DateStart.HasValue && model.DateEnd.HasValue && model.DateEnd < model.DateStart)
@@ -469,5 +504,10 @@ public class CompetitionsController : Controller
     private static string FormatDate(DateTime? date)
     {
         return date?.ToString("dd.MM.yyyy") ?? "без даты";
+    }
+
+    private static string? NormalizePhotoUrl(string? photoUrl)
+    {
+        return string.IsNullOrWhiteSpace(photoUrl) ? null : photoUrl.Trim();
     }
 }

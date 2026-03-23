@@ -16,6 +16,7 @@ public sealed class CompetitionListItemViewModel
     public int Id { get; init; }
     public string Title { get; init; } = string.Empty;
     public string? Description { get; init; }
+    public string PhotoUrl { get; init; } = string.Empty;
     public DateTime? DateStart { get; init; }
     public DateTime? DateEnd { get; init; }
     public string SportTitle { get; init; } = string.Empty;
@@ -30,6 +31,7 @@ public sealed class CompetitionDetailsViewModel
     public int Id { get; init; }
     public string Title { get; init; } = string.Empty;
     public string? Description { get; init; }
+    public string PhotoUrl { get; init; } = string.Empty;
     public DateTime? DateStart { get; init; }
     public DateTime? DateEnd { get; init; }
     public string SportTitle { get; init; } = string.Empty;
@@ -46,6 +48,7 @@ public sealed class CompetitionEventLinkViewModel
 {
     public int Id { get; init; }
     public string Title { get; init; } = string.Empty;
+    public string PhotoUrl { get; init; } = string.Empty;
     public DateTime? DateStart { get; init; }
     public DateTime? DateEnd { get; init; }
 }
@@ -80,6 +83,10 @@ public sealed class CompetitionEditViewModel
     [Display(Name = "Дисциплина")]
     [Required(ErrorMessage = "Выберите дисциплину.")]
     public int? SportSubTypeId { get; set; }
+
+    [Display(Name = "Ссылка на фото")]
+    [StringLength(512)]
+    public string? PhotoUrl { get; set; }
 
     public IReadOnlyList<SelectListItem> EventOptions { get; set; } = Array.Empty<SelectListItem>();
     public IReadOnlyList<SelectListItem> SportSubtypeOptions { get; set; } = Array.Empty<SelectListItem>();

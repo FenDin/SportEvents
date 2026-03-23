@@ -56,6 +56,7 @@ public class HomeController : Controller
                 Id = item.id,
                 Title = item.title,
                 Description = item.description,
+                PhotoUrl = item.photoUrl ?? MediaCatalog.Defaults.EventPhoto,
                 DateStart = item.dateStart,
                 DateEnd = item.dateEnd,
                 CompetitionCount = item.EventsCompetitions.Count
@@ -73,6 +74,7 @@ public class HomeController : Controller
                     Id = item.id,
                     Title = item.title,
                     Description = item.description,
+                    PhotoUrl = item.photoUrl ?? MediaCatalog.Defaults.EventPhoto,
                     DateStart = item.dateStart,
                     DateEnd = item.dateEnd,
                     CompetitionCount = item.EventsCompetitions.Count
@@ -89,6 +91,7 @@ public class HomeController : Controller
             UpcomingEvents = upcomingEvents,
             DemoAccounts = DemoAccountCatalog.All,
             CurrentRole = User.FindFirstValue(ClaimTypes.Role),
+            CurrentUserPhotoUrl = await GetCurrentUserPhotoUrlAsync(),
             UserDisplayName = GetDisplayName()
         };
     }
@@ -104,5 +107,21 @@ public class HomeController : Controller
             }.Where(item => !string.IsNullOrWhiteSpace(item)));
 
         return string.IsNullOrWhiteSpace(displayName) ? User.Identity?.Name : displayName;
+    }
+
+    private async Task<string> GetCurrentUserPhotoUrlAsync()
+    {
+        if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
+        {
+            return MediaCatalog.Defaults.UserPhoto;
+        }
+
+        var photoUrl = await db.Users
+            .AsNoTracking()
+            .Where(item => item.id == userId)
+            .Select(item => item.idContactNavigation != null ? item.idContactNavigation.photoUrl : null)
+            .FirstOrDefaultAsync();
+
+        return MediaCatalog.UserPhotoOrDefault(photoUrl);
     }
 }

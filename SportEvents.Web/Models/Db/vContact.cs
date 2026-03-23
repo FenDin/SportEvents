@@ -21,5 +21,7 @@ public partial class vContact
 
     public string Email { get; set; } = null!;
 
+    public string? PhotoUrl { get; set; }
+
     public string? PasswordHash { get; set; }
 }

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">200 meter race</title>
+  <desc id="desc">Illustration for the 200 meter race.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3a1640"/>
+      <stop offset="100%" stop-color="#d87545"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="720" rx="48" fill="url(#bg)"/>
+  <text x="90" y="142" fill="#ffe9d7" font-size="28" font-family="Verdana, Arial, sans-serif">200M</text>
+  <text x="88" y="310" fill="#ffffff" font-size="88" font-weight="700" font-family="Verdana, Arial, sans-serif">Curve Sprint</text>
+  <text x="90" y="378" fill="#ffe8d8" font-size="34" font-family="Verdana, Arial, sans-serif">University final over 200 meters</text>
+  <path d="M764 518c12-106 96-186 202-186 70 0 128 30 174 88" fill="none" stroke="#fff2df" stroke-width="18" stroke-linecap="round"/>
+  <path d="M806 518c10-80 78-138 160-138 54 0 102 22 144 66" fill="none" stroke="#ffd18b" stroke-width="18" stroke-linecap="round"/>
+  <path d="M848 518c8-56 54-92 118-92 40 0 76 16 110 46" fill="none" stroke="#fff2df" stroke-width="18" stroke-linecap="round"/>
+</svg>

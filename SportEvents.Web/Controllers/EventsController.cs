@@ -69,6 +69,7 @@ public class EventsController : Controller
             Id = eventEntity.id,
             Title = eventEntity.title,
             Description = eventEntity.description,
+            PhotoUrl = MediaCatalog.EventPhotoOrDefault(eventEntity.photoUrl),
             DateStart = eventEntity.dateStart,
             DateEnd = eventEntity.dateEnd,
             CanManage = CanManageCatalog(),
@@ -79,6 +80,7 @@ public class EventsController : Controller
                     Id = item.idCompetitionNavigation.id,
                     Title = item.idCompetitionNavigation.title,
                     Description = item.idCompetitionNavigation.description,
+                    PhotoUrl = MediaCatalog.CompetitionPhotoOrDefault(item.idCompetitionNavigation.photoUrl),
                     DateStart = item.idCompetitionNavigation.dateStart,
                     DateEnd = item.idCompetitionNavigation.dateEnd,
                     SportTitle = item.idCompetitionNavigation.idSportSubTypeNavigation.idSportTypeNavigation.idSportNavigation.title,
@@ -119,7 +121,8 @@ public class EventsController : Controller
             title = model.Title,
             description = model.Description,
             dateStart = model.DateStart,
-            dateEnd = model.DateEnd
+            dateEnd = model.DateEnd,
+            photoUrl = NormalizePhotoUrl(model.PhotoUrl)
         });
 
         await db.SaveChangesAsync();
@@ -142,7 +145,8 @@ public class EventsController : Controller
             Title = eventEntity.title,
             Description = eventEntity.description,
             DateStart = eventEntity.dateStart,
-            DateEnd = eventEntity.dateEnd
+            DateEnd = eventEntity.dateEnd,
+            PhotoUrl = eventEntity.photoUrl
         });
     }
 
@@ -173,6 +177,7 @@ public class EventsController : Controller
         eventEntity.description = model.Description;
         eventEntity.dateStart = model.DateStart;
         eventEntity.dateEnd = model.DateEnd;
+        eventEntity.photoUrl = NormalizePhotoUrl(model.PhotoUrl);
 
         await db.SaveChangesAsync();
         return RedirectToAction(nameof(Details), new { id });
@@ -197,6 +202,7 @@ public class EventsController : Controller
             Id = eventEntity.id,
             Title = eventEntity.title,
             Description = eventEntity.description,
+            PhotoUrl = MediaCatalog.EventPhotoOrDefault(eventEntity.photoUrl),
             DateStart = eventEntity.dateStart,
             DateEnd = eventEntity.dateEnd,
             Competitions = eventEntity.EventsCompetitions
@@ -263,6 +269,7 @@ public class EventsController : Controller
             Id = eventEntity.id,
             Title = eventEntity.title,
             Description = eventEntity.description,
+            PhotoUrl = MediaCatalog.EventPhotoOrDefault(eventEntity.photoUrl),
             DateStart = eventEntity.dateStart,
             DateEnd = eventEntity.dateEnd,
             CompetitionCount = eventEntity.EventsCompetitions.Count,
@@ -280,5 +287,10 @@ public class EventsController : Controller
         {
             ModelState.AddModelError(nameof(EventEditViewModel.DateEnd), "Дата окончания не может быть раньше даты начала.");
         }
+    }
+
+    private static string? NormalizePhotoUrl(string? photoUrl)
+    {
+        return string.IsNullOrWhiteSpace(photoUrl) ? null : photoUrl.Trim();
     }
 }

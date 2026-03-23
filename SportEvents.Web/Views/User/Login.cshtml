@@ -3,6 +3,8 @@
     ViewData["Title"] = "Вход";
     var returnUrl = ViewBag.ReturnUrl as string;
     var demoAccounts = ViewBag.DemoAccounts as IReadOnlyList<DemoAccountDefinition> ?? Array.Empty<DemoAccountDefinition>();
+    var statusMessage = TempData["StatusMessage"] as string;
+    var statusType = TempData["StatusType"] as string ?? "info";
 }
 
 <section class="auth-grid">
@@ -10,6 +12,13 @@
         <span class="section-kicker">Авторизация</span>
         <h1>Войти в SportEvents</h1>
         <p class="lead-text">Сессия работает через cookie-аутентификацию. После входа интерфейс будет адаптирован под вашу роль.</p>
+
+        @if (!string.IsNullOrWhiteSpace(statusMessage))
+        {
+            <div class="alert alert-@statusType mt-4" role="alert">
+                @statusMessage
+            </div>
+        }
 
         <form asp-action="Login" method="post" class="stack-list mt-4">
             @Html.AntiForgeryToken()

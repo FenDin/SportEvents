@@ -11,6 +11,8 @@ public partial class vCompetitionsFull
 
     public string? CompetitionDescription { get; set; }
 
+    public string? CompetitionPhotoUrl { get; set; }
+
     public DateTime? CompetitionDateStart { get; set; }
 
     public DateTime? CompetitionDateEnd { get; set; }

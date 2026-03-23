@@ -10,6 +10,7 @@ public static class DbInitializer
     public static async Task InitializeAsync(SportsCompetitionsDbContext db)
     {
         await db.Database.EnsureCreatedAsync();
+        await EnsurePhotoColumnsAsync(db);
 
         await SeedRolesAsync(db);
         await SeedSportsCatalogAsync(db);
@@ -122,22 +123,24 @@ public static class DbInitializer
                 "Открытая серия стартов для школьных и студенческих команд.",
                 new DateTime(2026, 5, 14, 9, 0, 0),
                 new DateTime(2026, 5, 16, 19, 0, 0),
+                MediaCatalog.Seeded.EventCityCup,
                 new[]
                 {
-                    new CompetitionSeed("100 м", "Спринт 100 м", "Личный старт на 100 метров.", new DateTime(2026, 5, 14, 10, 0, 0), new DateTime(2026, 5, 14, 13, 0, 0)),
-                    new CompetitionSeed("Прыжок в длину", "Прыжок в длину", "Квалификация и финал по прыжкам в длину.", new DateTime(2026, 5, 15, 11, 0, 0), new DateTime(2026, 5, 15, 16, 0, 0)),
-                    new CompetitionSeed("Классический волейбол", "Турнир по волейболу", "Групповой этап и плей-офф для команд.", new DateTime(2026, 5, 16, 9, 0, 0), new DateTime(2026, 5, 16, 18, 0, 0))
+                    new CompetitionSeed("100 м", "Спринт 100 м", "Личный старт на 100 метров.", new DateTime(2026, 5, 14, 10, 0, 0), new DateTime(2026, 5, 14, 13, 0, 0), MediaCatalog.Seeded.CompetitionSprint),
+                    new CompetitionSeed("Прыжок в длину", "Прыжок в длину", "Квалификация и финал по прыжкам в длину.", new DateTime(2026, 5, 15, 11, 0, 0), new DateTime(2026, 5, 15, 16, 0, 0), MediaCatalog.Seeded.CompetitionLongJump),
+                    new CompetitionSeed("Классический волейбол", "Турнир по волейболу", "Групповой этап и плей-офф для команд.", new DateTime(2026, 5, 16, 9, 0, 0), new DateTime(2026, 5, 16, 18, 0, 0), MediaCatalog.Seeded.CompetitionVolleyball)
                 }),
             new EventSeed(
                 "Открытый чемпионат университетов 2026",
                 "Межвузовская программа по плаванию, бегу и игровым видам спорта.",
                 new DateTime(2026, 9, 10, 10, 0, 0),
                 new DateTime(2026, 9, 12, 20, 0, 0),
+                MediaCatalog.Seeded.EventUniversity,
                 new[]
                 {
-                    new CompetitionSeed("200 м", "Университетский забег 200 м", "Финальный забег между командами университетов.", new DateTime(2026, 9, 10, 11, 0, 0), new DateTime(2026, 9, 10, 14, 0, 0)),
-                    new CompetitionSeed("100 м вольным стилем", "Плавание 100 м вольным стилем", "Индивидуальный старт на короткой воде.", new DateTime(2026, 9, 11, 10, 0, 0), new DateTime(2026, 9, 11, 13, 0, 0)),
-                    new CompetitionSeed("Баскетбол 3x3", "Кубок по баскетболу 3x3", "Быстрый турнир для студенческих сборных.", new DateTime(2026, 9, 12, 12, 0, 0), new DateTime(2026, 9, 12, 18, 0, 0))
+                    new CompetitionSeed("200 м", "Университетский забег 200 м", "Финальный забег между командами университетов.", new DateTime(2026, 9, 10, 11, 0, 0), new DateTime(2026, 9, 10, 14, 0, 0), MediaCatalog.Seeded.CompetitionRun200),
+                    new CompetitionSeed("100 м вольным стилем", "Плавание 100 м вольным стилем", "Индивидуальный старт на короткой воде.", new DateTime(2026, 9, 11, 10, 0, 0), new DateTime(2026, 9, 11, 13, 0, 0), MediaCatalog.Seeded.CompetitionSwimming),
+                    new CompetitionSeed("Баскетбол 3x3", "Кубок по баскетболу 3x3", "Быстрый турнир для студенческих сборных.", new DateTime(2026, 9, 12, 12, 0, 0), new DateTime(2026, 9, 12, 18, 0, 0), MediaCatalog.Seeded.CompetitionBasketball)
                 })
         };
 
@@ -151,12 +154,19 @@ public static class DbInitializer
                     title = eventSeed.Title,
                     description = eventSeed.Description,
                     dateStart = eventSeed.DateStart,
-                    dateEnd = eventSeed.DateEnd
+                    dateEnd = eventSeed.DateEnd,
+                    photoUrl = eventSeed.PhotoUrl
                 };
 
                 db.Events.Add(eventEntity);
                 await db.SaveChangesAsync();
             }
+
+            eventEntity.description = eventSeed.Description;
+            eventEntity.dateStart = eventSeed.DateStart;
+            eventEntity.dateEnd = eventSeed.DateEnd;
+            eventEntity.photoUrl = eventSeed.PhotoUrl;
+            await db.SaveChangesAsync();
 
             foreach (var competitionSeed in eventSeed.Competitions)
             {
@@ -175,12 +185,19 @@ public static class DbInitializer
                         title = competitionSeed.Title,
                         description = competitionSeed.Description,
                         dateStart = competitionSeed.DateStart,
-                        dateEnd = competitionSeed.DateEnd
+                        dateEnd = competitionSeed.DateEnd,
+                        photoUrl = competitionSeed.PhotoUrl
                     };
 
                     db.Competitions.Add(competition);
                     await db.SaveChangesAsync();
                 }
+
+                competition.description = competitionSeed.Description;
+                competition.dateStart = competitionSeed.DateStart;
+                competition.dateEnd = competitionSeed.DateEnd;
+                competition.photoUrl = competitionSeed.PhotoUrl;
+                await db.SaveChangesAsync();
 
                 var linkExists = await db.EventsCompetitions.AnyAsync(item =>
                     item.idEvent == eventEntity.id && item.idCompetition == competition.id);
@@ -242,6 +259,7 @@ public static class DbInitializer
             contact.sex = account.Sex;
             contact.phone = account.Phone;
             contact.email = account.Email;
+            contact.photoUrl = account.PhotoUrl;
             contact.passwordHash = passwordHasher.HashPassword(null!, account.Password);
 
             if (contact.User is null)
@@ -267,6 +285,22 @@ public static class DbInitializer
         }
     }
 
+    private static async Task EnsurePhotoColumnsAsync(SportsCompetitionsDbContext db)
+    {
+        const string sql = """
+            IF COL_LENGTH('dbo.Contact', 'photoUrl') IS NULL
+                ALTER TABLE [dbo].[Contact] ADD [photoUrl] nvarchar(512) NULL;
+
+            IF COL_LENGTH('dbo.Event', 'photoUrl') IS NULL
+                ALTER TABLE [dbo].[Event] ADD [photoUrl] nvarchar(512) NULL;
+
+            IF COL_LENGTH('dbo.Competition', 'photoUrl') IS NULL
+                ALTER TABLE [dbo].[Competition] ADD [photoUrl] nvarchar(512) NULL;
+            """;
+
+        await db.Database.ExecuteSqlRawAsync(sql);
+    }
+
     private sealed record SportSeed(string Title, IReadOnlyList<SportTypeSeed> Types);
     private sealed record SportTypeSeed(string Title, IReadOnlyList<string> SubTypes);
     private sealed record EventSeed(
@@ -274,11 +308,13 @@ public static class DbInitializer
         string Description,
         DateTime DateStart,
         DateTime DateEnd,
+        string PhotoUrl,
         IReadOnlyList<CompetitionSeed> Competitions);
     private sealed record CompetitionSeed(
         string SportSubTypeTitle,
         string Title,
         string Description,
         DateTime DateStart,
-        DateTime DateEnd);
+        DateTime DateEnd,
+        string PhotoUrl);
 }

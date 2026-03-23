@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">City cup event</title>
+  <desc id="desc">Illustration for the city sports cup.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d3150"/>
+      <stop offset="100%" stop-color="#2ba4a0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="720" rx="48" fill="url(#bg)"/>
+  <circle cx="1000" cy="140" r="150" fill="#ffffff" fill-opacity="0.12"/>
+  <path d="M0 560c140-50 286-76 442-76 278 0 510 80 758 184v52H0z" fill="#0c2235" fill-opacity="0.55"/>
+  <rect x="90" y="106" width="188" height="44" rx="22" fill="#d8f6ff" fill-opacity="0.2"/>
+  <text x="110" y="136" fill="#effcff" font-size="26" font-family="Verdana, Arial, sans-serif">CITY CUP 2026</text>
+  <text x="88" y="314" fill="#ffffff" font-size="90" font-weight="700" font-family="Verdana, Arial, sans-serif">Summer City Cup</text>
+  <text x="90" y="388" fill="#dff9ff" font-size="34" font-family="Verdana, Arial, sans-serif">Open event for schools and university teams</text>
+  <rect x="842" y="278" width="220" height="180" rx="28" fill="#ffffff" fill-opacity="0.16"/>
+  <rect x="874" y="316" width="56" height="110" rx="20" fill="#ffffff"/>
+  <rect x="952" y="286" width="56" height="140" rx="20" fill="#ffd179"/>
+  <rect x="1030" y="332" width="56" height="94" rx="20" fill="#ffffff"/>
+</svg>

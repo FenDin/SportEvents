@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">University championship</title>
+  <desc id="desc">Illustration for the university sports championship.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2e2149"/>
+      <stop offset="100%" stop-color="#d4743f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="720" rx="48" fill="url(#bg)"/>
+  <path d="M78 140h196v46H78z" fill="#fff1d3" fill-opacity="0.16"/>
+  <text x="98" y="172" fill="#fff9ee" font-size="26" font-family="Verdana, Arial, sans-serif">UNIVERSITY 2026</text>
+  <text x="88" y="312" fill="#ffffff" font-size="84" font-weight="700" font-family="Verdana, Arial, sans-serif">Campus Championship</text>
+  <text x="90" y="384" fill="#fff0dd" font-size="34" font-family="Verdana, Arial, sans-serif">Swimming, sprint races and team play finals</text>
+  <circle cx="960" cy="156" r="126" fill="#ffffff" fill-opacity="0.1"/>
+  <path d="M770 430l186-116 186 116-186 114z" fill="#fff4dc" fill-opacity="0.9"/>
+  <rect x="855" y="430" width="202" height="96" fill="#1e1731" fill-opacity="0.55"/>
+  <path d="M956 330v138" fill="none" stroke="#fff4dc" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="956" cy="314" r="22" fill="#ffd28d"/>
+</svg>

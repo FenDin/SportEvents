@@ -12,6 +12,7 @@ AS
         c.sex AS Sex,
         c.phone    AS Phone,
         c.email    AS Email,
+        c.photoUrl AS PhotoUrl,
         c.passwordHash AS PasswordHash
     FROM [Contact] c
 
@@ -45,6 +46,7 @@ AS
         c.id            AS CompetitionId,
         c.title         AS CompetitionTitle,
         c.[description] AS CompetitionDescription,
+        c.photoUrl      AS CompetitionPhotoUrl,
         c.dateStart     AS CompetitionDateStart,
         c.dateEnd       AS CompetitionDateEnd,
 
@@ -64,11 +66,13 @@ AS
     SELECT
         e.id        AS EventId,
         e.title     AS EventTitle,
+        e.photoUrl  AS EventPhotoUrl,
         e.dateStart AS EventDateStart,
         e.dateEnd   AS EventDateEnd,
 
         c.id        AS CompetitionId,
         c.title     AS CompetitionTitle,
+        c.photoUrl  AS CompetitionPhotoUrl,
         c.dateStart AS CompetitionDateStart,
         c.dateEnd   AS CompetitionDateEnd,
 

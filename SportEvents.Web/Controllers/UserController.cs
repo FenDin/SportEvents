@@ -112,6 +112,7 @@ public class UserController : Controller
             sex = model.Sex,
             phone = model.Phone,
             email = model.Email,
+            photoUrl = NormalizePhotoUrl(model.PhotoUrl),
             passwordHash = passwordHasher.HashPassword(null!, model.Password)
         };
 
@@ -174,6 +175,11 @@ public class UserController : Controller
         }
 
         return role;
+    }
+
+    private static string? NormalizePhotoUrl(string? photoUrl)
+    {
+        return string.IsNullOrWhiteSpace(photoUrl) ? null : photoUrl.Trim();
     }
 
     private async Task SignInAsync(User user, Contact contact, bool isPersistent)

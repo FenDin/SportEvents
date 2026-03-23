@@ -6,6 +6,7 @@
 <section class="section-shell">
     <div class="content-card">
         <span class="section-kicker">Соревнование</span>
+        <img src="@Model.PhotoUrl" alt="@Model.Title" class="cover-media cover-media-lg mt-3 mb-4" />
         <h1>@Model.Title</h1>
         <p class="lead-text">@(string.IsNullOrWhiteSpace(Model.Description) ? "Описание пока не заполнено." : Model.Description)</p>
         <div class="badge-row">
@@ -57,6 +58,7 @@
                 @foreach (var item in Model.Events)
                 {
                     <article class="list-card compact-card">
+                        <img src="@item.PhotoUrl" alt="@item.Title" class="cover-media cover-media-sm mb-3" />
                         <h3>@item.Title</h3>
                         <p class="mb-2">@item.DateStart?.ToString("dd.MM.yyyy HH:mm") - @item.DateEnd?.ToString("dd.MM.yyyy HH:mm")</p>
                         <a class="btn btn-sm btn-outline-secondary" asp-controller="Events" asp-action="Details" asp-route-id="@item.Id">Открыть событие</a>
@@ -79,11 +81,11 @@
                 </article>
                 <article class="list-card compact-card">
                     <h3>Организатор</h3>
-                    <p>Может редактировать параметры соревнования и его связь с событием.</p>
+                    <p>Может создавать, редактировать и удалять соревнования, а также менять их связь с событием.</p>
                 </article>
                 <article class="list-card compact-card">
                     <h3>Администратор</h3>
-                    <p>Может удалять соревнования и назначать роли пользователям.</p>
+                    <p>Может управлять соревнованиями, ролями и пользователями.</p>
                 </article>
             </div>
         </div>

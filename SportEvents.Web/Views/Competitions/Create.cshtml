@@ -21,6 +21,11 @@
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
         <div>
+            <label asp-for="PhotoUrl" class="form-label"></label>
+            <input asp-for="PhotoUrl" class="form-control" placeholder="/images/demo/competitions/sprint.svg или https://..." />
+            <span asp-validation-for="PhotoUrl" class="text-danger"></span>
+        </div>
+        <div>
             <label asp-for="EventId" class="form-label"></label>
             <select asp-for="EventId" asp-items="Model.EventOptions" class="form-select">
                 <option value="">Выберите событие</option>

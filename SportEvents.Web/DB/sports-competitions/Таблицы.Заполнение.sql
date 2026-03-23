@@ -259,11 +259,12 @@ BEGIN TRY
 
 -- #region 1) EVENT: Олимпийские игры
 INSERT INTO [Event]
-    (title, [description], dateStart, dateEnd)
+    (title, [description], photoUrl, dateStart, dateEnd)
 VALUES
     (
         N'Олимпийские игры — Париж 2024',
         N'Комплексное международное спортивное событие.',
+        N'/images/demo/events/city-cup.svg',
         '2024-07-26T00:00:00',
         '2024-08-11T00:00:00'
 );
@@ -274,35 +275,37 @@ DECLARE @toInsert TABLE(
     SportSubTypeTitle NVARCHAR(255) NOT NULL,
     CompetitionTitle NVARCHAR(255) NOT NULL,
     CompetitionDesc NVARCHAR(255) NOT NULL,
+    PhotoUrl NVARCHAR(512) NULL,
     DateStart DATETIME NULL,
     DateEnd DATETIME NULL
 );
 
 
 INSERT INTO @toInsert
-    (SportSubTypeTitle, CompetitionTitle, CompetitionDesc, DateStart, DateEnd)
+    (SportSubTypeTitle, CompetitionTitle, CompetitionDesc, PhotoUrl, DateStart, DateEnd)
 VALUES
-    (N'100 м', N'Лёгкая атлетика — 100 м', N'Предварительные забеги, полуфиналы и финал.', '2024-08-03T10:00:00', '2024-08-04T22:00:00'),
-    (N'200 м', N'Лёгкая атлетика — 200 м', N'Соревнования на спринтерской дистанции.', '2024-08-05T10:00:00', '2024-08-06T22:00:00'),
-    (N'400 м', N'Лёгкая атлетика — 400 м', N'Квалификация и финальные забеги.', '2024-08-07T10:00:00', '2024-08-08T22:00:00'),
-    (N'1500 м', N'Лёгкая атлетика — 1500 м', N'Тактическая средняя дистанция.', '2024-08-06T10:00:00', '2024-08-07T22:00:00'),
-    (N'Эстафета 4×100 м', N'Лёгкая атлетика — эстафета 4×100 м', N'Командный спринт.', '2024-08-08T18:00:00', '2024-08-09T22:00:00'),
-    (N'Прыжок в длину', N'Лёгкая атлетика — прыжок в длину', N'Квалификация и финал.', '2024-08-02T10:00:00', '2024-08-03T22:00:00'),
-    (N'Прыжок в высоту', N'Лёгкая атлетика — прыжок в высоту', N'Квалификация и финал.', '2024-08-04T10:00:00', '2024-08-05T22:00:00'),
-    (N'Толкание ядра', N'Лёгкая атлетика — толкание ядра', N'Квалификация и финал.', '2024-08-01T10:00:00', '2024-08-02T22:00:00'),
-    (N'Метание копья', N'Лёгкая атлетика — метание копья', N'Квалификация и финал.', '2024-08-09T10:00:00', '2024-08-10T22:00:00'),
-    (N'Марафон', N'Лёгкая атлетика — марафон', N'Дистанция 42.195 км.', '2024-08-10T08:00:00', '2024-08-10T14:00:00');
+    (N'100 м', N'Лёгкая атлетика — 100 м', N'Предварительные забеги, полуфиналы и финал.', N'/images/demo/competitions/sprint.svg', '2024-08-03T10:00:00', '2024-08-04T22:00:00'),
+    (N'200 м', N'Лёгкая атлетика — 200 м', N'Соревнования на спринтерской дистанции.', N'/images/demo/competitions/run-200.svg', '2024-08-05T10:00:00', '2024-08-06T22:00:00'),
+    (N'400 м', N'Лёгкая атлетика — 400 м', N'Квалификация и финальные забеги.', N'/images/placeholders/competition-default.svg', '2024-08-07T10:00:00', '2024-08-08T22:00:00'),
+    (N'1500 м', N'Лёгкая атлетика — 1500 м', N'Тактическая средняя дистанция.', N'/images/placeholders/competition-default.svg', '2024-08-06T10:00:00', '2024-08-07T22:00:00'),
+    (N'Эстафета 4×100 м', N'Лёгкая атлетика — эстафета 4×100 м', N'Командный спринт.', N'/images/placeholders/competition-default.svg', '2024-08-08T18:00:00', '2024-08-09T22:00:00'),
+    (N'Прыжок в длину', N'Лёгкая атлетика — прыжок в длину', N'Квалификация и финал.', N'/images/demo/competitions/long-jump.svg', '2024-08-02T10:00:00', '2024-08-03T22:00:00'),
+    (N'Прыжок в высоту', N'Лёгкая атлетика — прыжок в высоту', N'Квалификация и финал.', N'/images/placeholders/competition-default.svg', '2024-08-04T10:00:00', '2024-08-05T22:00:00'),
+    (N'Толкание ядра', N'Лёгкая атлетика — толкание ядра', N'Квалификация и финал.', N'/images/placeholders/competition-default.svg', '2024-08-01T10:00:00', '2024-08-02T22:00:00'),
+    (N'Метание копья', N'Лёгкая атлетика — метание копья', N'Квалификация и финал.', N'/images/placeholders/competition-default.svg', '2024-08-09T10:00:00', '2024-08-10T22:00:00'),
+    (N'Марафон', N'Лёгкая атлетика — марафон', N'Дистанция 42.195 км.', N'/images/placeholders/competition-default.svg', '2024-08-10T08:00:00', '2024-08-10T14:00:00');
 
 --#region Вставка Competition и привязка событий к соревнованиям(EventsCompetitions)
 DECLARE @newCompetitions TABLE (competitionId INT NOT NULL);
 
 INSERT INTO Competition
-    (idSportSubType, title, [description], dateStart, dateEnd)
+    (idSportSubType, title, [description], photoUrl, dateStart, dateEnd)
 OUTPUT INSERTED.id INTO @newCompetitions(competitionId)
 SELECT
     sst.id,
     i.CompetitionTitle,
     i.CompetitionDesc,
+    i.PhotoUrl,
     i.DateStart,
     i.DateEnd
 FROM @toInsert i
@@ -339,28 +342,28 @@ END CATCH
 -- #region Контакты(Contacts)
 
 INSERT INTO Contact
-    (firstname, lastname, middlename, birthDate, sex, phone, email)
+    (firstname, lastname, middlename, birthDate, sex, phone, email, photoUrl)
 VALUES
-    (N'Алексей', N'Смирнов', N'Андреевич', '1994-12-05', 1, '+7 999 101-01-01', 'alexey.smirnov@gmail.com'),
-    (N'Дмитрий', N'Кузнецов', N'Сергеевич', '1996-18-03', 1, '+7 999 202-02-02', 'd.kuznetsov@mail.ru'),
-    (N'Максим', N'Попов', N'Игоревич', '1989-07-11', 1, '+7 999 303-03-03', 'max.popov@yandex.ru'),
-    (N'Сергей', N'Васильев', N'Олегович', '1983-21-09', 1, '+7 999 404-04-04', 'sergey.vasiliev@gmail.com'),
-    (N'Андрей', N'Новиков', N'Дмитриевич', '1997-02-06', 1, '+7 999 505-05-05', 'andrey.novikov@mail.ru'),
-    (N'Роман', N'Фёдоров', N'Алексеевич', '1991-14-04', 1, '+7 999 606-06-06', 'roman.fedorov@yandex.ru'),
-    (N'Владимир', N'Морозов', N'Павлович', '1979-30-12', 1, '+7 999 707-07-07', 'v.morozov@gmail.com'),
-    (N'Евгений', N'Волков', N'Николаевич', '1986-09-07', 1, '+7 999 808-08-08', 'evgeny.volkov@mail.ru'),
-    (N'Татьяна', N'Соколова', N'Игоревна', '1998-25-02', 0, '+7 999 909-09-09', 't.sokolova@gmail.com'),
-    (N'Елена', N'Лебедева', N'Андреевна', '1993-11-10', 0, '+7 999 111-11-22', 'elena.lebedeva@mail.ru'),
-    (N'Мария', N'Козлова', N'Сергеевна', '2000-03-08', 0, '+7 999 222-22-33', 'maria.kozlova@yandex.ru'),
-    (N'Наталья', N'Павлова', N'Владимировна', '1988-19-01', 0, '+7 999 333-33-44', 'n.pavlova@gmail.com'),
-    (N'Ирина', N'Семёнова', N'Александровна', '1995-27-05', 0, '+7 999 444-44-55', 'irina.semenova@mail.ru'),
-    (N'Ксения', N'Голубева', N'Романовна', '2001-16-09', 0, '+7 999 555-55-66', 'ksenia.golubeva@yandex.ru'),
-    (N'Юлия', N'Виноградова', N'Олеговна', '1990-05-03', 0, '+7 999 666-66-77', 'y.vinogradova@gmail.com'),
-    (N'Олег', N'Богданов', N'Максимович', '1985-28-11', 1, '+7 999 777-77-88', 'oleg.bogdanov@mail.ru'),
-    (N'Никита', N'Орлов', N'Денисович', '2002-13-06', 1, '+7 999 888-88-99', 'nikita.orlov@yandex.ru'),
-    (N'Артур', N'Захаров', N'Михайлович', '1987-01-04', 1, '+7 999 999-99-00', 'arthur.zakharov@gmail.com'),
-    (N'Виктория', N'Макарова', N'Евгеньевна', '1996-22-12', 0, '+7 999 121-21-21', 'v.makarova@mail.ru'),
-    (N'Дарья', N'Тарасова', N'Константиновна', '1997-08-07', 0, '+7 999 131-31-31', 'daria.tarasova@yandex.ru');
+    (N'Алексей', N'Смирнов', N'Андреевич', '1994-12-05', 1, '+7 999 101-01-01', 'alexey.smirnov@gmail.com', N'/images/demo/users/administrator.svg'),
+    (N'Дмитрий', N'Кузнецов', N'Сергеевич', '1996-03-18', 1, '+7 999 202-02-02', 'd.kuznetsov@mail.ru', N'/images/demo/users/administrator.svg'),
+    (N'Максим', N'Попов', N'Игоревич', '1989-07-11', 1, '+7 999 303-03-03', 'max.popov@yandex.ru', N'/images/demo/users/organizer.svg'),
+    (N'Сергей', N'Васильев', N'Олегович', '1983-09-21', 1, '+7 999 404-04-04', 'sergey.vasiliev@gmail.com', N'/images/demo/users/organizer.svg'),
+    (N'Андрей', N'Новиков', N'Дмитриевич', '1997-02-06', 1, '+7 999 505-05-05', 'andrey.novikov@mail.ru', N'/images/demo/users/organizer.svg'),
+    (N'Роман', N'Фёдоров', N'Алексеевич', '1991-04-14', 1, '+7 999 606-06-06', 'roman.fedorov@yandex.ru', N'/images/demo/users/participant.svg'),
+    (N'Владимир', N'Морозов', N'Павлович', '1979-12-30', 1, '+7 999 707-07-07', 'v.morozov@gmail.com', N'/images/demo/users/participant.svg'),
+    (N'Евгений', N'Волков', N'Николаевич', '1986-09-07', 1, '+7 999 808-08-08', 'evgeny.volkov@mail.ru', N'/images/demo/users/participant.svg'),
+    (N'Татьяна', N'Соколова', N'Игоревна', '1998-02-25', 0, '+7 999 909-09-09', 't.sokolova@gmail.com', N'/images/demo/users/participant.svg'),
+    (N'Елена', N'Лебедева', N'Андреевна', '1993-11-10', 0, '+7 999 111-11-22', 'elena.lebedeva@mail.ru', N'/images/demo/users/participant.svg'),
+    (N'Мария', N'Козлова', N'Сергеевна', '2000-03-08', 0, '+7 999 222-22-33', 'maria.kozlova@yandex.ru', N'/images/demo/users/participant.svg'),
+    (N'Наталья', N'Павлова', N'Владимировна', '1988-01-19', 0, '+7 999 333-33-44', 'n.pavlova@gmail.com', N'/images/demo/users/participant.svg'),
+    (N'Ирина', N'Семёнова', N'Александровна', '1995-05-27', 0, '+7 999 444-44-55', 'irina.semenova@mail.ru', N'/images/demo/users/participant.svg'),
+    (N'Ксения', N'Голубева', N'Романовна', '2001-09-16', 0, '+7 999 555-55-66', 'ksenia.golubeva@yandex.ru', N'/images/demo/users/participant.svg'),
+    (N'Юлия', N'Виноградова', N'Олеговна', '1990-05-03', 0, '+7 999 666-66-77', 'y.vinogradova@gmail.com', N'/images/demo/users/participant.svg'),
+    (N'Олег', N'Богданов', N'Максимович', '1985-11-28', 1, '+7 999 777-77-88', 'oleg.bogdanov@mail.ru', N'/images/demo/users/viewer.svg'),
+    (N'Никита', N'Орлов', N'Денисович', '2002-06-13', 1, '+7 999 888-88-99', 'nikita.orlov@yandex.ru', N'/images/demo/users/viewer.svg'),
+    (N'Артур', N'Захаров', N'Михайлович', '1987-01-04', 1, '+7 999 999-99-00', 'arthur.zakharov@gmail.com', N'/images/demo/users/viewer.svg'),
+    (N'Виктория', N'Макарова', N'Евгеньевна', '1996-12-22', 0, '+7 999 121-21-21', 'v.makarova@mail.ru', N'/images/demo/users/viewer.svg'),
+    (N'Дарья', N'Тарасова', N'Константиновна', '1997-08-07', 0, '+7 999 131-31-31', 'daria.tarasova@yandex.ru', N'/images/demo/users/viewer.svg');
 
 -- #endregion
 
@@ -370,11 +373,8 @@ INSERT into Role
 VALUES
     (N'Администратор'),
     (N'Организатор'),
-    (N'Судья'),
-    (N'Тренер'),
     (N'Участник'),
-    (N'Пользователь'),
-    (N'Гость');
+    (N'Пользователь');
 --#endregion
 
 -- #region Пользователи (User)
@@ -384,7 +384,8 @@ SELECT c.id,
     CASE 
             WHEN c.id BETWEEN 1 AND 2 THEN 1  -- Администратор
             WHEN c.id BETWEEN 3 AND 5 THEN 2  -- Организатор
-            ELSE 5                            -- Участник
+            WHEN c.id BETWEEN 6 AND 15 THEN 3 -- Участник
+            ELSE 4                            -- Пользователь
     END
 FROM Contact c;
 --#endregion

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Default event image</title>
+  <desc id="desc">Abstract banner for events.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#113b59"/>
+      <stop offset="100%" stop-color="#1f8b8f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="720" rx="48" fill="url(#bg)"/>
+  <circle cx="1020" cy="120" r="160" fill="#ffffff" fill-opacity="0.12"/>
+  <circle cx="230" cy="540" r="220" fill="#ffffff" fill-opacity="0.08"/>
+  <rect x="92" y="110" width="210" height="46" rx="23" fill="#d7f3ff" fill-opacity="0.22"/>
+  <text x="110" y="142" fill="#f4fbff" font-size="28" font-family="Verdana, Arial, sans-serif">EVENT</text>
+  <text x="90" y="330" fill="#ffffff" font-size="88" font-weight="700" font-family="Verdana, Arial, sans-serif">SportEvents</text>
+  <text x="90" y="395" fill="#d7f3ff" font-size="34" font-family="Verdana, Arial, sans-serif">Default cover for a sports event</text>
+  <path d="M830 470c48-95 95-150 145-150 51 0 90 46 127 130" fill="none" stroke="#ffffff" stroke-width="18" stroke-linecap="round"/>
+  <path d="M813 454l34 44 71-114" fill="none" stroke="#ffd88b" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

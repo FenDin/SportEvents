@@ -73,6 +73,7 @@ public partial class SportsCompetitionsDbContext : DbContext
             entity.Property(e => e.dateEnd).HasColumnType("datetime");
             entity.Property(e => e.dateStart).HasColumnType("datetime");
             entity.Property(e => e.description).HasMaxLength(255);
+            entity.Property(e => e.photoUrl).HasMaxLength(512);
             entity.Property(e => e.title).HasMaxLength(255);
 
             entity.HasOne(d => d.idSportSubTypeNavigation).WithMany(p => p.Competitions)
@@ -93,6 +94,7 @@ public partial class SportsCompetitionsDbContext : DbContext
             entity.Property(e => e.lastname).HasMaxLength(255);
             entity.Property(e => e.middlename).HasMaxLength(255);
             entity.Property(e => e.passwordHash).HasMaxLength(255);
+            entity.Property(e => e.photoUrl).HasMaxLength(512);
             entity.Property(e => e.phone).HasMaxLength(20);
         });
 
@@ -107,6 +109,7 @@ public partial class SportsCompetitionsDbContext : DbContext
             entity.Property(e => e.dateEnd).HasColumnType("datetime");
             entity.Property(e => e.dateStart).HasColumnType("datetime");
             entity.Property(e => e.description).HasMaxLength(255);
+            entity.Property(e => e.photoUrl).HasMaxLength(512);
             entity.Property(e => e.title).HasMaxLength(255);
         });
 
@@ -329,12 +332,14 @@ public partial class SportsCompetitionsDbContext : DbContext
             entity.Property(e => e.CompetitionDateEnd).HasColumnType("datetime");
             entity.Property(e => e.CompetitionDateStart).HasColumnType("datetime");
             entity.Property(e => e.CompetitionDescription).HasMaxLength(255);
+            entity.Property(e => e.CompetitionPhotoUrl).HasMaxLength(512);
             entity.Property(e => e.CompetitionTitle).HasMaxLength(255);
             entity.Property(e => e.Email).HasMaxLength(255);
             entity.Property(e => e.FirstName).HasMaxLength(255);
             entity.Property(e => e.LastName).HasMaxLength(255);
             entity.Property(e => e.MiddleName).HasMaxLength(255);
             entity.Property(e => e.PasswordHash).HasMaxLength(255);
+            entity.Property(e => e.PhotoUrl).HasMaxLength(512);
             entity.Property(e => e.Phone).HasMaxLength(20);
             entity.Property(e => e.SchoolDescription).HasMaxLength(255);
             entity.Property(e => e.SchoolTitle).HasMaxLength(255);
@@ -352,6 +357,7 @@ public partial class SportsCompetitionsDbContext : DbContext
             entity.Property(e => e.CompetitionDateEnd).HasColumnType("datetime");
             entity.Property(e => e.CompetitionDateStart).HasColumnType("datetime");
             entity.Property(e => e.CompetitionDescription).HasMaxLength(255);
+            entity.Property(e => e.CompetitionPhotoUrl).HasMaxLength(512);
             entity.Property(e => e.CompetitionTitle).HasMaxLength(255);
             entity.Property(e => e.SportSubTypeTitle).HasMaxLength(255);
             entity.Property(e => e.SportTitle).HasMaxLength(255);
@@ -371,6 +377,7 @@ public partial class SportsCompetitionsDbContext : DbContext
             entity.Property(e => e.LastName).HasMaxLength(255);
             entity.Property(e => e.MiddleName).HasMaxLength(255);
             entity.Property(e => e.PasswordHash).HasMaxLength(255);
+            entity.Property(e => e.PhotoUrl).HasMaxLength(512);
             entity.Property(e => e.Phone).HasMaxLength(20);
         });
 
@@ -382,9 +389,11 @@ public partial class SportsCompetitionsDbContext : DbContext
 
             entity.Property(e => e.CompetitionDateEnd).HasColumnType("datetime");
             entity.Property(e => e.CompetitionDateStart).HasColumnType("datetime");
+            entity.Property(e => e.CompetitionPhotoUrl).HasMaxLength(512);
             entity.Property(e => e.CompetitionTitle).HasMaxLength(255);
             entity.Property(e => e.EventDateEnd).HasColumnType("datetime");
             entity.Property(e => e.EventDateStart).HasColumnType("datetime");
+            entity.Property(e => e.EventPhotoUrl).HasMaxLength(512);
             entity.Property(e => e.EventTitle).HasMaxLength(255);
             entity.Property(e => e.SportSubTypeTitle).HasMaxLength(255);
             entity.Property(e => e.SportTitle).HasMaxLength(255);
@@ -403,6 +412,7 @@ public partial class SportsCompetitionsDbContext : DbContext
             entity.Property(e => e.LastName).HasMaxLength(255);
             entity.Property(e => e.MiddleName).HasMaxLength(255);
             entity.Property(e => e.PasswordHash).HasMaxLength(255);
+            entity.Property(e => e.PhotoUrl).HasMaxLength(512);
             entity.Property(e => e.Phone).HasMaxLength(20);
             entity.Property(e => e.SchoolDescription).HasMaxLength(255);
             entity.Property(e => e.SchoolTitle).HasMaxLength(255);
@@ -444,6 +454,7 @@ public partial class SportsCompetitionsDbContext : DbContext
             entity.Property(e => e.LastName).HasMaxLength(255);
             entity.Property(e => e.MiddleName).HasMaxLength(255);
             entity.Property(e => e.PasswordHash).HasMaxLength(255);
+            entity.Property(e => e.PhotoUrl).HasMaxLength(512);
             entity.Property(e => e.Phone).HasMaxLength(20);
             entity.Property(e => e.RoleTitle).HasMaxLength(255);
             entity.Property(e => e.UserDateCreated).HasColumnType("datetime");

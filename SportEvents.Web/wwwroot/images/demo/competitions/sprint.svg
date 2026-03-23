@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Sprint competition</title>
+  <desc id="desc">Illustration for the sprint competition.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f344f"/>
+      <stop offset="100%" stop-color="#4cb6b0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="720" rx="48" fill="url(#bg)"/>
+  <text x="92" y="142" fill="#ddfbff" font-size="28" font-family="Verdana, Arial, sans-serif">100M</text>
+  <text x="86" y="308" fill="#ffffff" font-size="88" font-weight="700" font-family="Verdana, Arial, sans-serif">Sprint Start</text>
+  <text x="90" y="376" fill="#d7fcff" font-size="34" font-family="Verdana, Arial, sans-serif">Track race against the clock</text>
+  <path d="M768 530h340" fill="none" stroke="#fff4cf" stroke-width="16" stroke-linecap="round"/>
+  <path d="M790 468l118-86 96 20 98-82" fill="none" stroke="#ffffff" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="908" cy="382" r="26" fill="#ffd27c"/>
+  <circle cx="1006" cy="400" r="26" fill="#ffd27c"/>
+</svg>

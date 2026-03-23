@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Default competition image</title>
+  <desc id="desc">Abstract banner for competitions.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4a223c"/>
+      <stop offset="100%" stop-color="#c46c2b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="720" rx="48" fill="url(#bg)"/>
+  <rect x="70" y="86" width="220" height="46" rx="23" fill="#fff5d9" fill-opacity="0.18"/>
+  <text x="92" y="118" fill="#fffaf0" font-size="28" font-family="Verdana, Arial, sans-serif">COMPETITION</text>
+  <text x="86" y="320" fill="#ffffff" font-size="86" font-weight="700" font-family="Verdana, Arial, sans-serif">Play To Win</text>
+  <text x="90" y="390" fill="#fff1cb" font-size="34" font-family="Verdana, Arial, sans-serif">Default cover for a competition card</text>
+  <circle cx="990" cy="156" r="128" fill="#ffffff" fill-opacity="0.1"/>
+  <circle cx="960" cy="470" r="174" fill="#ffffff" fill-opacity="0.08"/>
+  <path d="M846 238h118v84c0 33-19 63-48 78l-11 6-11-6c-29-15-48-45-48-78v-84z" fill="#ffe39d"/>
+  <path d="M994 238h118v84c0 33-19 63-48 78l-11 6-11-6c-29-15-48-45-48-78v-84z" fill="#fff3cc" fill-opacity="0.7"/>
+  <rect x="907" y="406" width="38" height="102" rx="16" fill="#fff3cc"/>
+  <rect x="1055" y="406" width="38" height="102" rx="16" fill="#fff3cc"/>
+  <rect x="880" y="500" width="238" height="34" rx="17" fill="#fff3cc"/>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Volleyball competition</title>
+  <desc id="desc">Illustration for the volleyball competition.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#123c5a"/>
+      <stop offset="100%" stop-color="#e07f2b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="720" rx="48" fill="url(#bg)"/>
+  <text x="90" y="142" fill="#fff4dc" font-size="28" font-family="Verdana, Arial, sans-serif">VOLLEYBALL</text>
+  <text x="88" y="310" fill="#ffffff" font-size="86" font-weight="700" font-family="Verdana, Arial, sans-serif">Team Court</text>
+  <text x="90" y="378" fill="#fff3dc" font-size="34" font-family="Verdana, Arial, sans-serif">Group stage and playoff matches</text>
+  <path d="M860 256v290" fill="none" stroke="#fff4dc" stroke-width="14"/>
+  <path d="M1030 256v290" fill="none" stroke="#fff4dc" stroke-width="14"/>
+  <path d="M860 348h170" fill="none" stroke="#fff4dc" stroke-width="10" stroke-dasharray="10 10"/>
+  <circle cx="952" cy="304" r="72" fill="#fff4dc"/>
+  <path d="M912 252c36 10 70 38 90 74" fill="none" stroke="#e07f2b" stroke-width="12"/>
+  <path d="M887 304c30-23 80-39 134-26" fill="none" stroke="#e07f2b" stroke-width="12"/>
+</svg>

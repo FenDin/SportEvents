@@ -32,6 +32,10 @@ namespace SportEvents.Web.Models
         [Required, EmailAddress, StringLength(255)]
         public string Email { get; set; } = "";
 
+        [Display(Name = "Ссылка на фото")]
+        [StringLength(512)]
+        public string? PhotoUrl { get; set; }
+
         [Display(Name = "Пароль")]
         [Required, DataType(DataType.Password), MinLength(8)]
         public string Password { get; set; } = "";

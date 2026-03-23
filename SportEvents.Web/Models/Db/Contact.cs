@@ -21,6 +21,8 @@ public partial class Contact
 
     public string email { get; set; } = null!;
 
+    public string? photoUrl { get; set; }
+
     public string? passwordHash { get; set; }
 
     public virtual ICollection<ImagesUser> ImagesUsers { get; set; } = new List<ImagesUser>();

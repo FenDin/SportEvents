@@ -194,6 +194,75 @@ a {
     padding: 1rem;
 }
 
+.entity-card-grid {
+    display: grid;
+    grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: start;
+}
+
+.cover-media,
+.avatar-media {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+    border: 1px solid rgba(216, 225, 235, 0.95);
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+    background: linear-gradient(135deg, #dbeafe, #f8fafc);
+}
+
+.cover-media {
+    border-radius: calc(var(--radius-md) - 4px);
+    aspect-ratio: 16 / 10;
+}
+
+.cover-media-lg {
+    max-height: 24rem;
+}
+
+.cover-media-md {
+    max-width: 15rem;
+}
+
+.cover-media-sm {
+    max-width: 12rem;
+}
+
+.avatar-media {
+    border-radius: 50%;
+    aspect-ratio: 1;
+}
+
+.avatar-media-sm {
+    width: 3.25rem;
+    min-width: 3.25rem;
+}
+
+.avatar-media-lg {
+    width: 5rem;
+    min-width: 5rem;
+}
+
+.avatar-media-xl {
+    width: 7rem;
+    min-width: 7rem;
+}
+
+.hero-identity,
+.user-row,
+.preview-pane {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.preview-pane {
+    padding: 1rem 1.25rem;
+    border: 1px dashed var(--line);
+    border-radius: var(--radius-md);
+    background: var(--surface-soft);
+}
+
 .badge-row,
 .meta-row {
     display: flex;
@@ -298,8 +367,14 @@ a {
     .compact-hero,
     .content-grid,
     .auth-grid,
-    .filter-panel {
+    .filter-panel,
+    .entity-card-grid {
         grid-template-columns: 1fr;
+    }
+
+    .cover-media-md,
+    .cover-media-sm {
+        max-width: 100%;
     }
 }
 

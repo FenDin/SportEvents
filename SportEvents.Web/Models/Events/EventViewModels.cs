@@ -15,6 +15,7 @@ public sealed class EventListItemViewModel
     public int Id { get; init; }
     public string Title { get; init; } = string.Empty;
     public string? Description { get; init; }
+    public string PhotoUrl { get; init; } = string.Empty;
     public DateTime? DateStart { get; init; }
     public DateTime? DateEnd { get; init; }
     public int CompetitionCount { get; init; }
@@ -26,6 +27,7 @@ public sealed class EventDetailsViewModel
     public int Id { get; init; }
     public string Title { get; init; } = string.Empty;
     public string? Description { get; init; }
+    public string PhotoUrl { get; init; } = string.Empty;
     public DateTime? DateStart { get; init; }
     public DateTime? DateEnd { get; init; }
     public bool CanManage { get; init; }
@@ -37,6 +39,7 @@ public sealed class EventCompetitionViewModel
     public int Id { get; init; }
     public string Title { get; init; } = string.Empty;
     public string? Description { get; init; }
+    public string PhotoUrl { get; init; } = string.Empty;
     public DateTime? DateStart { get; init; }
     public DateTime? DateEnd { get; init; }
     public string SportTitle { get; init; } = string.Empty;
@@ -66,4 +69,8 @@ public sealed class EventEditViewModel
     [Required(ErrorMessage = "Укажите дату окончания.")]
     [DataType(DataType.DateTime)]
     public DateTime? DateEnd { get; set; }
+
+    [Display(Name = "Ссылка на фото")]
+    [StringLength(512)]
+    public string? PhotoUrl { get; set; }
 }

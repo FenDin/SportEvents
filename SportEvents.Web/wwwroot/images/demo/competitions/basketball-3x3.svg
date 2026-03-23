@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Basketball 3x3 competition</title>
+  <desc id="desc">Illustration for the 3x3 basketball competition.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#21243d"/>
+      <stop offset="100%" stop-color="#de7f31"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="720" rx="48" fill="url(#bg)"/>
+  <text x="90" y="142" fill="#fff0d8" font-size="28" font-family="Verdana, Arial, sans-serif">BASKETBALL 3X3</text>
+  <text x="86" y="308" fill="#ffffff" font-size="80" font-weight="700" font-family="Verdana, Arial, sans-serif">Half Court Cup</text>
+  <text x="90" y="376" fill="#ffedd7" font-size="34" font-family="Verdana, Arial, sans-serif">Fast matches with rotating squads</text>
+  <circle cx="944" cy="350" r="110" fill="#ffedd7"/>
+  <path d="M944 240v220" fill="none" stroke="#de7f31" stroke-width="12"/>
+  <path d="M834 350h220" fill="none" stroke="#de7f31" stroke-width="12"/>
+  <path d="M868 274c62 22 108 72 128 132" fill="none" stroke="#de7f31" stroke-width="12"/>
+  <path d="M868 426c62-22 108-72 128-132" fill="none" stroke="#de7f31" stroke-width="12"/>
+  <path d="M1028 300h72v76" fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="round"/>
+</svg>
