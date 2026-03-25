@@ -16,6 +16,7 @@ public static class DbInitializer
         await SeedSportsCatalogAsync(db);
         await SeedEventsCatalogAsync(db);
         await SeedDemoUsersAsync(db);
+        await SeedParticipantEnrollmentsAsync(db);
     }
 
     private static async Task SeedRolesAsync(SportsCompetitionsDbContext db)
@@ -283,6 +284,83 @@ public static class DbInitializer
 
             await db.SaveChangesAsync();
         }
+    }
+
+    private static async Task SeedParticipantEnrollmentsAsync(SportsCompetitionsDbContext db)
+    {
+        var participants = await db.Participants
+            .AsNoTracking()
+            .OrderBy(item => item.id)
+            .Select(item => item.id)
+            .ToListAsync();
+
+        if (participants.Count == 0)
+        {
+            return;
+        }
+
+        var competitions = await db.Competitions
+            .AsNoTracking()
+            .OrderBy(item => item.dateStart ?? DateTime.MaxValue)
+            .ThenBy(item => item.title)
+            .Select(item => new
+            {
+                item.id,
+                ParticipantIds = item.ParticipantsCompetitions.Select(link => link.idParticipant).ToList()
+            })
+            .ToListAsync();
+
+        if (competitions.Count == 0)
+        {
+            return;
+        }
+
+        var targetParticipantsPerCompetition = Math.Min(3, participants.Count);
+        var enrollmentsToAdd = new List<ParticipantsCompetition>();
+
+        for (var index = 0; index < competitions.Count; index++)
+        {
+            var competition = competitions[index];
+            var existingParticipantIds = competition.ParticipantIds
+                .Distinct()
+                .ToHashSet();
+
+            if (existingParticipantIds.Count >= targetParticipantsPerCompetition)
+            {
+                continue;
+            }
+
+            var rotatedParticipants = participants
+                .Skip(index % participants.Count)
+                .Concat(participants.Take(index % participants.Count));
+
+            foreach (var participantId in rotatedParticipants)
+            {
+                if (!existingParticipantIds.Add(participantId))
+                {
+                    continue;
+                }
+
+                enrollmentsToAdd.Add(new ParticipantsCompetition
+                {
+                    idCompetition = competition.id,
+                    idParticipant = participantId
+                });
+
+                if (existingParticipantIds.Count >= targetParticipantsPerCompetition)
+                {
+                    break;
+                }
+            }
+        }
+
+        if (enrollmentsToAdd.Count == 0)
+        {
+            return;
+        }
+
+        await db.ParticipantsCompetitions.AddRangeAsync(enrollmentsToAdd);
+        await db.SaveChangesAsync();
     }
 
     private static async Task EnsurePhotoColumnsAsync(SportsCompetitionsDbContext db)

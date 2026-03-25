@@ -90,4 +90,55 @@
             </div>
         </div>
     </div>
+
+    <div class="content-card mt-4">
+        <div class="section-header">
+            <div>
+                <span class="section-kicker">Состав</span>
+                <h2>Участники соревнования</h2>
+            </div>
+        </div>
+
+        @if (Model.Participants.Count == 0)
+        {
+            <div class="empty-state">На это соревнование пока никто не записался.</div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Участник</th>
+                            <th>Школа</th>
+                            <th>Email</th>
+                            <th>Телефон</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Participants)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="user-row">
+                                        <img src="@item.PhotoUrl" alt="@item.FullName" class="avatar-media avatar-media-sm" />
+                                        <div>
+                                            <div class="fw-semibold">@item.FullName</div>
+                                            @if (item.IsCurrentUser)
+                                            {
+                                                <span class="badge text-bg-light">Вы</span>
+                                            }
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>@(string.IsNullOrWhiteSpace(item.SchoolTitle) ? "Не указана" : item.SchoolTitle)</td>
+                                <td><code>@item.Email</code></td>
+                                <td>@(string.IsNullOrWhiteSpace(item.Phone) ? "Не указан" : item.Phone)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
 </section>

@@ -72,6 +72,33 @@ public class CompetitionsController : Controller
         }
 
         var participant = await GetCurrentParticipantAsync();
+        var participantEntries = await db.ParticipantsCompetitions
+            .AsNoTracking()
+            .Where(item => item.idCompetition == id)
+            .Include(item => item.idParticipantNavigation)
+                .ThenInclude(item => item.idContactNavigation)
+            .Include(item => item.idParticipantNavigation)
+                .ThenInclude(item => item.idSchoolNavigation)
+            .ToListAsync();
+
+        var participants = participantEntries
+            .Select(item => new CompetitionParticipantViewModel
+            {
+                Id = item.idParticipantNavigation.id,
+                FullName = FormatFullName(
+                    item.idParticipantNavigation.idContactNavigation.lastname,
+                    item.idParticipantNavigation.idContactNavigation.firstname,
+                    item.idParticipantNavigation.idContactNavigation.middlename),
+                PhotoUrl = MediaCatalog.UserPhotoOrDefault(item.idParticipantNavigation.idContactNavigation.photoUrl),
+                SchoolTitle = item.idParticipantNavigation.idSchoolNavigation != null
+                    ? item.idParticipantNavigation.idSchoolNavigation.title
+                    : null,
+                Email = item.idParticipantNavigation.idContactNavigation.email,
+                Phone = item.idParticipantNavigation.idContactNavigation.phone,
+                IsCurrentUser = participant is not null && item.idParticipant == participant.id
+            })
+            .OrderBy(item => item.FullName)
+            .ToList();
 
         return View(new CompetitionDetailsViewModel
         {
@@ -98,7 +125,8 @@ public class CompetitionsController : Controller
                     DateEnd = link.idEventNavigation.dateEnd
                 })
                 .OrderBy(item => item.DateStart ?? DateTime.MaxValue)
-                .ToList()
+                .ToList(),
+            Participants = participants
         });
     }
 
@@ -504,6 +532,14 @@ public class CompetitionsController : Controller
     private static string FormatDate(DateTime? date)
     {
         return date?.ToString("dd.MM.yyyy") ?? "без даты";
+    }
+
+    private static string FormatFullName(string lastName, string firstName, string? middleName)
+    {
+        return string.Join(
+            " ",
+            new[] { lastName, firstName, middleName }
+                .Where(item => !string.IsNullOrWhiteSpace(item)));
     }
 
     private static string? NormalizePhotoUrl(string? photoUrl)

@@ -42,6 +42,7 @@ public sealed class CompetitionDetailsViewModel
     public bool CanEnroll { get; init; }
     public bool IsUserEnrolled { get; init; }
     public IReadOnlyList<CompetitionEventLinkViewModel> Events { get; init; } = Array.Empty<CompetitionEventLinkViewModel>();
+    public IReadOnlyList<CompetitionParticipantViewModel> Participants { get; init; } = Array.Empty<CompetitionParticipantViewModel>();
 }
 
 public sealed class CompetitionEventLinkViewModel
@@ -51,6 +52,17 @@ public sealed class CompetitionEventLinkViewModel
     public string PhotoUrl { get; init; } = string.Empty;
     public DateTime? DateStart { get; init; }
     public DateTime? DateEnd { get; init; }
+}
+
+public sealed class CompetitionParticipantViewModel
+{
+    public int Id { get; init; }
+    public string FullName { get; init; } = string.Empty;
+    public string PhotoUrl { get; init; } = string.Empty;
+    public string? SchoolTitle { get; init; }
+    public string Email { get; init; } = string.Empty;
+    public string? Phone { get; init; }
+    public bool IsCurrentUser { get; init; }
 }
 
 public sealed class CompetitionEditViewModel
