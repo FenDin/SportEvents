@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 namespace SportEvents.Web.Models.Schools;
@@ -58,6 +57,14 @@ public sealed class SchoolEditViewModel
     [Display(Name = "Учащиеся и выпускники")]
     public List<int> SelectedParticipantIds { get; set; } = new();
 
-    public IReadOnlyList<SelectListItem> SportSubtypeOptions { get; set; } = Array.Empty<SelectListItem>();
-    public IReadOnlyList<SelectListItem> ParticipantOptions { get; set; } = Array.Empty<SelectListItem>();
+    public IReadOnlyList<SchoolSelectionOptionViewModel> SportSubtypeOptions { get; set; } = Array.Empty<SchoolSelectionOptionViewModel>();
+    public IReadOnlyList<SchoolSelectionOptionViewModel> ParticipantOptions { get; set; } = Array.Empty<SchoolSelectionOptionViewModel>();
+}
+
+public sealed class SchoolSelectionOptionViewModel
+{
+    public int Id { get; init; }
+    public string Label { get; init; } = string.Empty;
+    public string? Description { get; init; }
+    public bool IsSelected { get; init; }
 }

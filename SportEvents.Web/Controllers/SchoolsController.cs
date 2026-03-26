@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SportEvents.Web.Constants;
 using SportEvents.Web.Data;
@@ -292,11 +291,11 @@ public class SchoolsController : Controller
             .ToListAsync();
 
         model.SportSubtypeOptions = sportSubtypes
-            .Select(item => new SelectListItem
+            .Select(item => new SchoolSelectionOptionViewModel
             {
-                Value = item.id.ToString(),
-                Text = $"{item.idSportTypeNavigation.idSportNavigation.title} / {item.idSportTypeNavigation.title} / {item.title}",
-                Selected = selectedSportSubtypeIds.Contains(item.id)
+                Id = item.id,
+                Label = $"{item.idSportTypeNavigation.idSportNavigation.title} / {item.idSportTypeNavigation.title} / {item.title}",
+                IsSelected = selectedSportSubtypeIds.Contains(item.id)
             })
             .ToList();
 
@@ -309,11 +308,12 @@ public class SchoolsController : Controller
             .ToListAsync();
 
         model.ParticipantOptions = participants
-            .Select(item => new SelectListItem
+            .Select(item => new SchoolSelectionOptionViewModel
             {
-                Value = item.id.ToString(),
-                Text = BuildParticipantOptionLabel(item),
-                Selected = selectedParticipantIds.Contains(item.id)
+                Id = item.id,
+                Label = BuildParticipantOptionLabel(item),
+                Description = BuildParticipantOptionDescription(item),
+                IsSelected = selectedParticipantIds.Contains(item.id)
             })
             .ToList();
     }
@@ -421,16 +421,21 @@ public class SchoolsController : Controller
 
     private static string BuildParticipantOptionLabel(Participant participant)
     {
-        var fullName = FormatFullName(
+        return FormatFullName(
             participant.idContactNavigation.lastname,
             participant.idContactNavigation.firstname,
             participant.idContactNavigation.middlename);
+    }
+
+    private static string BuildParticipantOptionDescription(Participant participant)
+    {
+        var email = participant.idContactNavigation.email;
 
         if (participant.idSchoolNavigation is null)
         {
-            return $"{fullName} ({participant.idContactNavigation.email})";
+            return email;
         }
 
-        return $"{fullName} ({participant.idContactNavigation.email}) - {participant.idSchoolNavigation.title}";
+        return $"{email} · {participant.idSchoolNavigation.title}";
     }
 }

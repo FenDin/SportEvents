@@ -23,13 +23,51 @@
         </div>
         <div>
             <label asp-for="SelectedSportSubtypeIds" class="form-label"></label>
-            <select asp-for="SelectedSportSubtypeIds" asp-items="Model.SportSubtypeOptions" class="form-select" size="12" multiple></select>
+            @if (Model.SportSubtypeOptions.Count == 0)
+            {
+                <div class="empty-state">Доступные дисциплины пока не найдены.</div>
+            }
+            else
+            {
+                <div class="selection-list">
+                    @foreach (var option in Model.SportSubtypeOptions)
+                    {
+                        <label class="selection-item">
+                            <input class="form-check-input mt-1" type="checkbox" name="SelectedSportSubtypeIds" value="@option.Id" @(option.IsSelected ? "checked=\"checked\"" : null) />
+                            <span class="selection-copy">
+                                <span class="fw-semibold d-block">@option.Label</span>
+                            </span>
+                        </label>
+                    }
+                </div>
+            }
             <div class="form-text">Обновите набор дисциплин, которые представляет школа.</div>
             <span asp-validation-for="SelectedSportSubtypeIds" class="text-danger"></span>
         </div>
         <div>
             <label asp-for="SelectedParticipantIds" class="form-label"></label>
-            <select asp-for="SelectedParticipantIds" asp-items="Model.ParticipantOptions" class="form-select" size="12" multiple></select>
+            @if (Model.ParticipantOptions.Count == 0)
+            {
+                <div class="empty-state">Участники пока не найдены.</div>
+            }
+            else
+            {
+                <div class="selection-list">
+                    @foreach (var option in Model.ParticipantOptions)
+                    {
+                        <label class="selection-item">
+                            <input class="form-check-input mt-1" type="checkbox" name="SelectedParticipantIds" value="@option.Id" @(option.IsSelected ? "checked=\"checked\"" : null) />
+                            <span class="selection-copy">
+                                <span class="fw-semibold d-block">@option.Label</span>
+                                @if (!string.IsNullOrWhiteSpace(option.Description))
+                                {
+                                    <span class="text-muted small">@option.Description</span>
+                                }
+                            </span>
+                        </label>
+                    }
+                </div>
+            }
             <div class="form-text">Добавляйте и удаляйте учащихся или выпускников. Если участник уже закреплён за другой школой, он будет переведён.</div>
             <span asp-validation-for="SelectedParticipantIds" class="text-danger"></span>
         </div>
