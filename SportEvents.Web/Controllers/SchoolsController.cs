@@ -59,7 +59,7 @@ public class SchoolsController : Controller
     public async Task<IActionResult> Create()
     {
         var model = new SchoolEditViewModel();
-        await PopulateSportSubtypeOptionsAsync(model);
+        await PopulateOptionsAsync(model);
         return View(model);
     }
 
@@ -72,7 +72,7 @@ public class SchoolsController : Controller
 
         if (!ModelState.IsValid)
         {
-            await PopulateSportSubtypeOptionsAsync(model);
+            await PopulateOptionsAsync(model);
             return View(model);
         }
 
@@ -94,6 +94,18 @@ public class SchoolsController : Controller
             });
         }
 
+        if (model.SelectedParticipantIds.Count > 0)
+        {
+            var participants = await db.Participants
+                .Where(item => model.SelectedParticipantIds.Contains(item.id))
+                .ToListAsync();
+
+            foreach (var participant in participants)
+            {
+                participant.idSchool = school.id;
+            }
+        }
+
         await db.SaveChangesAsync();
         return RedirectToAction(nameof(Details), new { id = school.id });
     }
@@ -105,6 +117,7 @@ public class SchoolsController : Controller
         var school = await db.Schools
             .AsNoTracking()
             .Include(item => item.SchoolsSportsSubTypes)
+            .Include(item => item.Participants)
             .FirstOrDefaultAsync(item => item.id == id);
 
         if (school is null)
@@ -119,10 +132,13 @@ public class SchoolsController : Controller
             Description = school.description,
             SelectedSportSubtypeIds = school.SchoolsSportsSubTypes
                 .Select(item => item.idSportSubType)
+                .ToList(),
+            SelectedParticipantIds = school.Participants
+                .Select(item => item.id)
                 .ToList()
         };
 
-        await PopulateSportSubtypeOptionsAsync(model);
+        await PopulateOptionsAsync(model);
         return View(model);
     }
 
@@ -140,12 +156,13 @@ public class SchoolsController : Controller
 
         if (!ModelState.IsValid)
         {
-            await PopulateSportSubtypeOptionsAsync(model);
+            await PopulateOptionsAsync(model);
             return View(model);
         }
 
         var school = await db.Schools
             .Include(item => item.SchoolsSportsSubTypes)
+            .Include(item => item.Participants)
             .FirstOrDefaultAsync(item => item.id == id);
 
         if (school is null)
@@ -179,6 +196,27 @@ public class SchoolsController : Controller
                 idSchool = school.id,
                 idSportSubType = sportSubtypeId
             });
+        }
+
+        var selectedParticipantIds = model.SelectedParticipantIds
+            .Distinct()
+            .ToHashSet();
+
+        foreach (var participant in school.Participants.Where(item => !selectedParticipantIds.Contains(item.id)))
+        {
+            participant.idSchool = null;
+        }
+
+        if (selectedParticipantIds.Count > 0)
+        {
+            var participantsToAssign = await db.Participants
+                .Where(item => selectedParticipantIds.Contains(item.id))
+                .ToListAsync();
+
+            foreach (var participant in participantsToAssign)
+            {
+                participant.idSchool = school.id;
+            }
         }
 
         await db.SaveChangesAsync();
@@ -240,9 +278,10 @@ public class SchoolsController : Controller
                         .ThenInclude(item => item.idSportNavigation);
     }
 
-    private async Task PopulateSportSubtypeOptionsAsync(SchoolEditViewModel model)
+    private async Task PopulateOptionsAsync(SchoolEditViewModel model)
     {
-        var selectedIds = model.SelectedSportSubtypeIds.ToHashSet();
+        var selectedSportSubtypeIds = model.SelectedSportSubtypeIds.ToHashSet();
+        var selectedParticipantIds = model.SelectedParticipantIds.ToHashSet();
         var sportSubtypes = await db.SportSubtypes
             .AsNoTracking()
             .Include(item => item.idSportTypeNavigation)
@@ -257,7 +296,24 @@ public class SchoolsController : Controller
             {
                 Value = item.id.ToString(),
                 Text = $"{item.idSportTypeNavigation.idSportNavigation.title} / {item.idSportTypeNavigation.title} / {item.title}",
-                Selected = selectedIds.Contains(item.id)
+                Selected = selectedSportSubtypeIds.Contains(item.id)
+            })
+            .ToList();
+
+        var participants = await db.Participants
+            .AsNoTracking()
+            .Include(item => item.idContactNavigation)
+            .Include(item => item.idSchoolNavigation)
+            .OrderBy(item => item.idContactNavigation.lastname)
+            .ThenBy(item => item.idContactNavigation.firstname)
+            .ToListAsync();
+
+        model.ParticipantOptions = participants
+            .Select(item => new SelectListItem
+            {
+                Value = item.id.ToString(),
+                Text = BuildParticipantOptionLabel(item),
+                Selected = selectedParticipantIds.Contains(item.id)
             })
             .ToList();
     }
@@ -361,5 +417,20 @@ public class SchoolsController : Controller
             " ",
             new[] { lastName, firstName, middleName }
                 .Where(item => !string.IsNullOrWhiteSpace(item)));
+    }
+
+    private static string BuildParticipantOptionLabel(Participant participant)
+    {
+        var fullName = FormatFullName(
+            participant.idContactNavigation.lastname,
+            participant.idContactNavigation.firstname,
+            participant.idContactNavigation.middlename);
+
+        if (participant.idSchoolNavigation is null)
+        {
+            return $"{fullName} ({participant.idContactNavigation.email})";
+        }
+
+        return $"{fullName} ({participant.idContactNavigation.email}) - {participant.idSchoolNavigation.title}";
     }
 }

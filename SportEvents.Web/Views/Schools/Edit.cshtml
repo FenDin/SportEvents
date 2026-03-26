@@ -27,6 +27,12 @@
             <div class="form-text">Обновите набор дисциплин, которые представляет школа.</div>
             <span asp-validation-for="SelectedSportSubtypeIds" class="text-danger"></span>
         </div>
+        <div>
+            <label asp-for="SelectedParticipantIds" class="form-label"></label>
+            <select asp-for="SelectedParticipantIds" asp-items="Model.ParticipantOptions" class="form-select" size="12" multiple></select>
+            <div class="form-text">Добавляйте и удаляйте учащихся или выпускников. Если участник уже закреплён за другой школой, он будет переведён.</div>
+            <span asp-validation-for="SelectedParticipantIds" class="text-danger"></span>
+        </div>
         <div class="d-flex gap-2">
             <button type="submit" class="btn btn-accent">Сохранить</button>
             <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@Model.Id">Назад</a>

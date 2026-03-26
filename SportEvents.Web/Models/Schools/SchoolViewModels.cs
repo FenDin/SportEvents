@@ -55,5 +55,9 @@ public sealed class SchoolEditViewModel
     [Display(Name = "Дисциплины")]
     public List<int> SelectedSportSubtypeIds { get; set; } = new();
 
+    [Display(Name = "Учащиеся и выпускники")]
+    public List<int> SelectedParticipantIds { get; set; } = new();
+
     public IReadOnlyList<SelectListItem> SportSubtypeOptions { get; set; } = Array.Empty<SelectListItem>();
+    public IReadOnlyList<SelectListItem> ParticipantOptions { get; set; } = Array.Empty<SelectListItem>();
 }
