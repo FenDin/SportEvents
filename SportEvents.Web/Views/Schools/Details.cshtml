@@ -1,0 +1,90 @@
+@model SchoolDetailsViewModel
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<section class="section-shell">
+    <div class="content-card">
+        <span class="section-kicker">Школа</span>
+        <h1>@Model.Title</h1>
+        <p class="lead-text">@(string.IsNullOrWhiteSpace(Model.Description) ? "Описание пока не заполнено." : Model.Description)</p>
+        <div class="meta-row">
+            <span>Участников: @Model.ParticipantCount</span>
+            <span>Дисциплин: @Model.SportSubTypes.Count</span>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-3">
+            <a class="btn btn-outline-secondary" asp-action="Index">К списку школ</a>
+            @if (Model.CanManage)
+            {
+                <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@Model.Id">Редактировать</a>
+                <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@Model.Id">Удалить</a>
+            }
+        </div>
+    </div>
+
+    <div class="content-grid">
+        <div class="content-card">
+            <div class="section-header">
+                <div>
+                    <span class="section-kicker">Профиль школы</span>
+                    <h2>Специализация по SportSubtypes</h2>
+                </div>
+            </div>
+            @if (Model.SportSubTypes.Count == 0)
+            {
+                <div class="empty-state">Для школы пока не выбраны специализации.</div>
+            }
+            else
+            {
+                <div class="badge-row">
+                    @foreach (var sportSubtype in Model.SportSubTypes)
+                    {
+                        <span class="badge text-bg-light">@sportSubtype</span>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="content-card">
+            <div class="section-header">
+                <div>
+                    <span class="section-kicker">Состав</span>
+                    <h2>Учащиеся и выпускники (Participants)</h2>
+                </div>
+            </div>
+            @if (Model.Participants.Count == 0)
+            {
+                <div class="empty-state">У этой школы пока нет закреплённых учащихся или выпускников.</div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Participant</th>
+                                <th>Email</th>
+                                <th>Телефон</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var participant in Model.Participants)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="user-row">
+                                            <img src="@participant.PhotoUrl" alt="@participant.FullName" class="avatar-media avatar-media-sm" />
+                                            <div class="fw-semibold">@participant.FullName</div>
+                                        </div>
+                                    </td>
+                                    <td><code>@participant.Email</code></td>
+                                    <td>@(string.IsNullOrWhiteSpace(participant.Phone) ? "Не указан" : participant.Phone)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</section>

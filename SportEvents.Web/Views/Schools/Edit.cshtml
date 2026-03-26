@@ -1,0 +1,39 @@
+@model SchoolEditViewModel
+@{
+    ViewData["Title"] = "Редактировать школу";
+}
+
+<section class="content-card form-card">
+    <span class="section-kicker">Каталог школ</span>
+    <h1>Редактирование школы</h1>
+    <form asp-action="Edit" method="post" class="stack-list mt-4">
+        @Html.AntiForgeryToken()
+        <input asp-for="Id" type="hidden" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div>
+            <label asp-for="Title" class="form-label"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="SelectedSportSubtypeIds" class="form-label"></label>
+            <select asp-for="SelectedSportSubtypeIds" asp-items="Model.SportSubtypeOptions" class="form-select" size="12" multiple></select>
+            <div class="form-text">Обновите набор дисциплин, которые представляет школа.</div>
+            <span asp-validation-for="SelectedSportSubtypeIds" class="text-danger"></span>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-accent">Сохранить</button>
+            <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@Model.Id">Назад</a>
+        </div>
+    </form>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

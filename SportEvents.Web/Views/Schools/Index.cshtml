@@ -1,0 +1,80 @@
+@model SchoolCatalogViewModel
+@{
+    ViewData["Title"] = "Школы";
+}
+
+<section class="section-shell">
+    <div class="section-header">
+        <div>
+            <span class="section-kicker">Каталог школ</span>
+            <h1>Спортивные школы</h1>
+        </div>
+        @if (Model.CanManage)
+        {
+            <a class="btn btn-accent" asp-action="Create">Добавить школу</a>
+        }
+    </div>
+
+    <form method="get" class="filter-panel">
+        <input type="text" name="searchQuery" value="@Model.SearchQuery" class="form-control" placeholder="Поиск по названию, описанию или дисциплине" />
+        <button type="submit" class="btn btn-outline-secondary">Применить</button>
+    </form>
+
+    @if (Model.Items.Count == 0)
+    {
+        <div class="empty-state">По текущему запросу школы не найдены.</div>
+    }
+    else
+    {
+        <div class="stack-list">
+            @foreach (var item in Model.Items)
+            {
+                <article class="list-card">
+                    <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
+                        <div class="flex-grow-1">
+                            <h2>@item.Title</h2>
+                            <p>@(string.IsNullOrWhiteSpace(item.Description) ? "Описание пока не заполнено." : item.Description)</p>
+                            <p class="mb-2 small text-muted">Специализация по SportSubtypes:</p>
+                            <div class="badge-row">
+                                @foreach (var sportSubtype in item.SportSubTypes)
+                                {
+                                    <span class="badge text-bg-light">@sportSubtype</span>
+                                }
+                            </div>
+                            <p class="mb-2 mt-3 small text-muted">Учащиеся и выпускники (participants):</p>
+                            @if (item.ParticipantNames.Count == 0)
+                            {
+                                <p class="mb-0 text-muted">Пока не привязаны.</p>
+                            }
+                            else
+                            {
+                                <div class="badge-row">
+                                    @foreach (var participantName in item.ParticipantNames)
+                                    {
+                                        <span class="badge text-bg-dark">@participantName</span>
+                                    }
+                                    @if (item.ParticipantCount > item.ParticipantNames.Count)
+                                    {
+                                        <span class="badge text-bg-secondary">+@(item.ParticipantCount - item.ParticipantNames.Count)</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                        <div class="meta-block">
+                            <span>@item.ParticipantCount participants</span>
+                            <span>@item.SportSubTypes.Count sport subtypes</span>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        <a class="btn btn-sm btn-outline-secondary" asp-action="Details" asp-route-id="@item.Id">Подробнее</a>
+                        @if (Model.CanManage)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@item.Id">Редактировать</a>
+                            <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+                        }
+                    </div>
+                </article>
+            }
+        </div>
+    }
+</section>

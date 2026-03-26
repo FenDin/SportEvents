@@ -14,6 +14,7 @@ public static class DbInitializer
 
         await SeedRolesAsync(db);
         await SeedSportsCatalogAsync(db);
+        await SeedSchoolsCatalogAsync(db);
         await SeedEventsCatalogAsync(db);
         await SeedDemoUsersAsync(db);
         await SeedParticipantEnrollmentsAsync(db);
@@ -219,10 +220,79 @@ public static class DbInitializer
         }
     }
 
+    private static async Task SeedSchoolsCatalogAsync(SportsCompetitionsDbContext db)
+    {
+        var schoolSeeds = new[]
+        {
+            new SchoolSeed(
+                "СДЮСШ Олимп",
+                "Подготовка по беговым дисциплинам и прыжкам для городских стартов.",
+                new[] { "100 м", "200 м", "Прыжок в длину" }),
+            new SchoolSeed(
+                "Спортивная школа Волна",
+                "Учебные группы по плаванию и общей физической подготовке.",
+                new[] { "100 м вольным стилем", "50 м вольным стилем" }),
+            new SchoolSeed(
+                "Командный центр Старт",
+                "Секции по игровым видам спорта для школьных и студенческих составов.",
+                new[] { "Классический волейбол", "Баскетбол 3x3" })
+        };
+
+        foreach (var schoolSeed in schoolSeeds)
+        {
+            var school = await db.Schools
+                .Include(item => item.SchoolsSportsSubTypes)
+                .FirstOrDefaultAsync(item => item.title == schoolSeed.Title);
+
+            if (school is null)
+            {
+                school = new School
+                {
+                    title = schoolSeed.Title,
+                    description = schoolSeed.Description
+                };
+
+                db.Schools.Add(school);
+                await db.SaveChangesAsync();
+            }
+
+            school.description = schoolSeed.Description;
+            await db.SaveChangesAsync();
+
+            var sportSubtypeIds = await db.SportSubtypes
+                .Where(item => schoolSeed.SportSubTypeTitles.Contains(item.title))
+                .Select(item => item.id)
+                .ToListAsync();
+
+            foreach (var sportSubtypeId in sportSubtypeIds)
+            {
+                var linkExists = school.SchoolsSportsSubTypes.Any(item => item.idSportSubType == sportSubtypeId)
+                    || await db.SchoolsSportsSubTypes.AnyAsync(item => item.idSchool == school.id && item.idSportSubType == sportSubtypeId);
+
+                if (linkExists)
+                {
+                    continue;
+                }
+
+                db.SchoolsSportsSubTypes.Add(new SchoolsSportsSubType
+                {
+                    idSchool = school.id,
+                    idSportSubType = sportSubtypeId
+                });
+            }
+
+            await db.SaveChangesAsync();
+        }
+    }
+
     private static async Task SeedDemoUsersAsync(SportsCompetitionsDbContext db)
     {
         var passwordHasher = new PasswordHasher<object>();
         var roles = await db.Roles.ToDictionaryAsync(item => item.title, StringComparer.OrdinalIgnoreCase);
+        var defaultSchoolId = await db.Schools
+            .OrderBy(item => item.title)
+            .Select(item => (int?)item.id)
+            .FirstOrDefaultAsync();
 
         foreach (var account in DemoAccountCatalog.All)
         {
@@ -279,7 +349,17 @@ public static class DbInitializer
             if (string.Equals(account.Role, AppRoles.Participant, StringComparison.OrdinalIgnoreCase)
                 && contact.Participant is null)
             {
-                db.Participants.Add(new Participant { idContact = contact.id });
+                db.Participants.Add(new Participant
+                {
+                    idContact = contact.id,
+                    idSchool = defaultSchoolId
+                });
+            }
+            else if (string.Equals(account.Role, AppRoles.Participant, StringComparison.OrdinalIgnoreCase)
+                && contact.Participant is not null
+                && contact.Participant.idSchool is null)
+            {
+                contact.Participant.idSchool = defaultSchoolId;
             }
 
             await db.SaveChangesAsync();
@@ -381,6 +461,7 @@ public static class DbInitializer
 
     private sealed record SportSeed(string Title, IReadOnlyList<SportTypeSeed> Types);
     private sealed record SportTypeSeed(string Title, IReadOnlyList<string> SubTypes);
+    private sealed record SchoolSeed(string Title, string Description, IReadOnlyList<string> SportSubTypeTitles);
     private sealed record EventSeed(
         string Title,
         string Description,
