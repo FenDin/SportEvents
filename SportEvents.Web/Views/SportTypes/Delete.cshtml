@@ -1,0 +1,32 @@
+@model SportTypeDetailsViewModel
+@{
+    ViewData["Title"] = "Удалить тип спорта";
+}
+
+<section class="content-card narrow-card">
+    <span class="section-kicker">Удаление</span>
+    <h1>@Model.Title</h1>
+    <p class="lead-text">Тип спорта можно удалить только если у него нет дочерних дисциплин.</p>
+    <div class="meta-row">
+        <span>Вид спорта: @Model.SportTitle</span>
+        <span>Дисциплин: @Model.SportSubtypeCount</span>
+    </div>
+
+    @if (!ViewData.ModelState.IsValid || !Model.CanDelete)
+    {
+        <div class="empty-state mt-4">
+            @(Model.DeleteBlockedReason ?? "Удаление сейчас недоступно.")
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(item => item.Errors))
+            {
+                <div>@error.ErrorMessage</div>
+            }
+        </div>
+    }
+
+    <form asp-action="Delete" method="post" class="d-flex gap-2 mt-4">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger" disabled="@(!Model.CanDelete)">Удалить</button>
+        <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@Model.Id">Отмена</a>
+    </form>
+</section>

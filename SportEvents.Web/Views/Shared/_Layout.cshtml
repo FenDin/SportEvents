@@ -2,6 +2,11 @@
 @{
     var isAuthenticated = User.Identity?.IsAuthenticated ?? false;
     var role = User.FindFirstValue(ClaimTypes.Role);
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? string.Empty;
+    var entityControllers = new[] { "Events", "Competitions", "Schools", "Sports", "SportTypes", "SportSubtypes" };
+    var entitiesDropdownClass = entityControllers.Contains(currentController, StringComparer.OrdinalIgnoreCase)
+        ? "nav-link dropdown-toggle active"
+        : "nav-link dropdown-toggle";
     var displayName = string.Join(" ", new[]
     {
         User.FindFirstValue(ClaimTypes.GivenName),
@@ -34,25 +39,28 @@
                 </button>
                 <div class="collapse navbar-collapse" id="mainNav">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Events" asp-action="Index">События</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Competitions" asp-action="Index">Соревнования</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Schools" asp-action="Index">Школы</a>
+                        <li class="nav-item dropdown">
+                            <a class="@entitiesDropdownClass" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Сущности</a>
+                            <ul class="dropdown-menu dropdown-menu-dark navbar-dropdown">
+                                <li><a class="dropdown-item @(string.Equals(currentController, "Events", StringComparison.OrdinalIgnoreCase) ? "active" : null)" asp-controller="Events" asp-action="Index">События</a></li>
+                                <li><a class="dropdown-item @(string.Equals(currentController, "Competitions", StringComparison.OrdinalIgnoreCase) ? "active" : null)" asp-controller="Competitions" asp-action="Index">Соревнования</a></li>
+                                <li><a class="dropdown-item @(string.Equals(currentController, "Schools", StringComparison.OrdinalIgnoreCase) ? "active" : null)" asp-controller="Schools" asp-action="Index">Школы</a></li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li><a class="dropdown-item @(string.Equals(currentController, "Sports", StringComparison.OrdinalIgnoreCase) ? "active" : null)" asp-controller="Sports" asp-action="Index">Виды спорта</a></li>
+                                <li><a class="dropdown-item @(string.Equals(currentController, "SportTypes", StringComparison.OrdinalIgnoreCase) ? "active" : null)" asp-controller="SportTypes" asp-action="Index">Типы спорта</a></li>
+                                <li><a class="dropdown-item @(string.Equals(currentController, "SportSubtypes", StringComparison.OrdinalIgnoreCase) ? "active" : null)" asp-controller="SportSubtypes" asp-action="Index">Дисциплины</a></li>
+                            </ul>
                         </li>
                         @if (isAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Home" asp-action="StartPage">Кабинет</a>
+                                <a class="nav-link @(string.Equals(currentController, "Home", StringComparison.OrdinalIgnoreCase) ? "active" : null)" asp-controller="Home" asp-action="StartPage">Кабинет</a>
                             </li>
                         }
                         @if (User.IsInRole(AppRoles.Administrator))
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Admin" asp-action="Index">Роли и пользователи</a>
+                                <a class="nav-link @(string.Equals(currentController, "Admin", StringComparison.OrdinalIgnoreCase) ? "active" : null)" asp-controller="Admin" asp-action="Index">Роли и пользователи</a>
                             </li>
                         }
                     </ul>

@@ -1,0 +1,64 @@
+@model SportTypeCatalogViewModel
+@{
+    ViewData["Title"] = "Типы спорта";
+}
+
+<section class="section-shell">
+    <div class="section-header">
+        <div>
+            <span class="section-kicker">Справочник спорта</span>
+            <h1>Типы спорта</h1>
+        </div>
+        @if (Model.CanManage)
+        {
+            <a class="btn btn-accent" asp-action="Create">Добавить тип спорта</a>
+        }
+    </div>
+
+    <form method="get" class="filter-panel">
+        <input type="text" name="searchQuery" value="@Model.SearchQuery" class="form-control" placeholder="Поиск по виду, типу или дисциплине" />
+        <button type="submit" class="btn btn-outline-secondary">Применить</button>
+    </form>
+
+    @if (Model.Items.Count == 0)
+    {
+        <div class="empty-state">Типы спорта не найдены.</div>
+    }
+    else
+    {
+        <div class="stack-list">
+            @foreach (var item in Model.Items)
+            {
+                <article class="list-card">
+                    <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
+                        <div class="flex-grow-1">
+                            <h2>@item.Title</h2>
+                            <p class="mb-2 text-muted">Вид спорта: <a class="link-underline link-underline-opacity-0" asp-controller="Sports" asp-action="Details" asp-route-id="@item.SportId">@item.SportTitle</a></p>
+                            <div class="badge-row">
+                                @foreach (var sportSubtypeTitle in item.SportSubtypeTitles)
+                                {
+                                    <span class="badge text-bg-light">@sportSubtypeTitle</span>
+                                }
+                                @if (item.SportSubtypeCount > item.SportSubtypeTitles.Count)
+                                {
+                                    <span class="badge text-bg-secondary">+@(item.SportSubtypeCount - item.SportSubtypeTitles.Count)</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="meta-block">
+                            <span>Дисциплин: @item.SportSubtypeCount</span>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        <a class="btn btn-sm btn-outline-secondary" asp-action="Details" asp-route-id="@item.Id">Подробнее</a>
+                        @if (Model.CanManage)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@item.Id">Редактировать</a>
+                            <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+                        }
+                    </div>
+                </article>
+            }
+        </div>
+    }
+</section>

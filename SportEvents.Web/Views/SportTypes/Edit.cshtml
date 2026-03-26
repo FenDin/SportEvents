@@ -1,0 +1,36 @@
+@model SportTypeEditViewModel
+@{
+    ViewData["Title"] = "Редактировать тип спорта";
+}
+
+<section class="content-card form-card">
+    <span class="section-kicker">Справочник спорта</span>
+    <h1>Редактирование типа спорта</h1>
+    <form asp-action="Edit" method="post" class="stack-list mt-4">
+        @Html.AntiForgeryToken()
+        <input asp-for="Id" type="hidden" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div>
+            <label asp-for="SportId" class="form-label"></label>
+            <select asp-for="SportId" asp-items="Model.SportOptions" class="form-select">
+                <option value="">Выберите вид спорта</option>
+            </select>
+            <span asp-validation-for="SportId" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="Title" class="form-label"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-accent">Сохранить</button>
+            <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@Model.Id">Назад</a>
+        </div>
+    </form>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
